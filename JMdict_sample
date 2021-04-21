@@ -1,0 +1,1875 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Rev 1.09 Added the g_type attribute -->
+<!-- Rev 1.08 Delete <info> and <example> elements -->
+<!-- Rev 1.07 Revised POS tags for the adjectives -->
+<!-- Rev 1.06 Dropped the "*" from the end of the entry element. Dropped the g_lang attribute in favour of xml:lang Dropped the <lang> element and replaced it with <lsource> at the sense level. Moved <dial> from the entry level to the sense level.
+Changed "info*" to "info?". -->
+<!-- Rev 1.05 Changed the <gram> element name to <pos> Added the g_gend attribute moved the s_inf element -->
+<!-- Rev 1.04 Changes: Rename the project "JMdict" and add the g_lang attribute to the <gloss> entity - 08 May 1999 Moved the <gram>, <field> and <misc> elements down to be in the <sense> region, as suggested by Chris Czeyka. I have also tidied up
+some of the "*" as he suggested. - 27 May 2000 Added the re_nokanji element - Sep 2003. -->
+<!DOCTYPE JMdict [
+  <!ELEMENT JMdict (entry*)>
+  <!-- -->
+  <!ELEMENT entry (ent_seq, k_ele*, r_ele+, sense+)>
+  <!-- Entries consist of kanji elements, reading elements, general information and sense elements. Each entry must have at least one reading element and one sense element. Others are optional. -->
+  <!ELEMENT ent_seq (#PCDATA)>
+  <!-- A unique numeric sequence number for each entry -->
+  <!ELEMENT k_ele (keb, ke_inf*, ke_pri*)>
+  <!-- The kanji element, or in its absence, the reading element, is the defining component of each entry. The overwhelming majority of entries will have a single kanji element associated with a word in Japanese. Where there are multiple kanji elements
+  within an entry, they will be orthographical variants of the same word, either using variations in okurigana, or alternative and equivalent kanji. Common "mis-spellings" may be included, provided they are associated with appropriate information
+  fields. Synonyms are not included; they may be indicated in the cross-reference field associated with the sense element. -->
+  <!ELEMENT keb (#PCDATA)>
+  <!-- This element will contain a word or short phrase in Japanese which is written using at least one non-kana character (usually kanji, but can be other characters). The valid characters are kanji, kana, related characters such as chouon and
+  kurikaeshi, and in exceptional cases, letters from other alphabets. -->
+  <!ELEMENT ke_inf (#PCDATA)>
+  <!-- This is a coded information field related specifically to the orthography of the keb, and will typically indicate some unusual aspect, such as okurigana irregularity. -->
+  <!ELEMENT ke_pri (#PCDATA)>
+  <!-- This and the equivalent re_pri field are provided to record information about the relative priority of the entry, and consist of codes indicating the word appears in various references which can be taken as an indication of the frequency with
+  which the word is used. This field is intended for use either by applications which want to concentrate on entries of a particular priority, or to generate subset files. The current values in this field are: - news1/2: appears in the "wordfreq" file
+  compiled by Alexandre Girardi from the Mainichi Shimbun. (See the Monash ftp archive for a copy.) Words in the first 12,000 in that file are marked "news1" and words in the second 12,000 are marked "news2". - ichi1/2: appears in the "Ichimango goi
+  bunruishuu", Senmon Kyouiku Publishing, Tokyo, 1998. (The entries marked "ichi2" were demoted from ichi1 because they were observed to have low frequencies in the WWW and newspapers.) - spec1 and spec2: a small number of words use this marker when
+  they are detected as being common, but are not included in other lists. - gai1/2: common loanwords, based on the wordfreq file. - nfxx: this is an indicator of frequency-of-use ranking in the wordfreq file. "xx" is the number of the set of 500 words
+  in which the entry can be found, with "01" assigned to the first 500, "02" to the second, and so on. (The entries with news1, ichi1, spec1, spec2 and gai1 values are marked with a "(P)" in the EDICT and EDICT2 files.) The reason both the kanji and
+  reading elements are tagged is because on occasions a priority is only associated with a particular kanji/reading pair. -->
+  <!-- -->
+  <!ELEMENT r_ele (reb, re_nokanji?, re_restr*, re_inf*, re_pri*)>
+  <!-- The reading element typically contains the valid readings of the word(s) in the kanji element using modern kanadzukai. Where there are multiple reading elements, they will typically be alternative readings of the kanji element. In the absence of
+  a kanji element, i.e. in the case of a word or phrase written entirely in kana, these elements will define the entry. -->
+  <!ELEMENT reb (#PCDATA)>
+  <!-- this element content is restricted to kana and related characters such as chouon and kurikaeshi. Kana usage will be consistent between the keb and reb elements; e.g. if the keb contains katakana, so too will the reb. -->
+  <!ELEMENT re_nokanji (#PCDATA)>
+  <!-- This element, which will usually have a null value, indicates that the reb, while associated with the keb, cannot be regarded as a true reading of the kanji. It is typically used for words such as foreign place names, gairaigo which can be in
+  kanji or katakana, etc. -->
+  <!ELEMENT re_restr (#PCDATA)>
+  <!-- This element is used to indicate when the reading only applies to a subset of the keb elements in the entry. In its absence, all readings apply to all kanji elements. The contents of this element must exactly match those of one of the keb
+  elements. -->
+  <!ELEMENT re_inf (#PCDATA)>
+  <!-- General coded information pertaining to the specific reading. Typically it will be used to indicate some unusual aspect of the reading. -->
+  <!ELEMENT re_pri (#PCDATA)>
+  <!-- See the comment on ke_pri above. -->
+  <!-- -->
+  <!ELEMENT sense (stagk*, stagr*, pos*, xref*, ant*, field*, misc*, s_inf*, lsource*, dial*, gloss*)>
+  <!-- The sense element will record the translational equivalent of the Japanese word, plus other related information. Where there are several distinctly different meanings of the word, multiple sense elements will be employed. -->
+  <!ELEMENT stagk (#PCDATA)>
+  <!ELEMENT stagr (#PCDATA)>
+  <!-- These elements, if present, indicate that the sense is restricted to the lexeme represented by the keb and/or reb. -->
+  <!ELEMENT xref (#PCDATA)*>
+  <!-- This element is used to indicate a cross-reference to another entry with a similar or related meaning or sense. The content of this element is typically a keb or reb element in another entry. In some cases a keb will be followed by a reb and/or
+  a sense number to provide a precise target for the cross-reference. Where this happens, a JIS "centre-dot" (0x2126) is placed between the components of the cross-reference. The target keb or reb must not contain a centre-dot. -->
+  <!ELEMENT ant (#PCDATA)*>
+  <!-- This element is used to indicate another entry which is an antonym of the current entry/sense. The content of this element must exactly match that of a keb or reb element in another entry. -->
+  <!ELEMENT pos (#PCDATA)>
+  <!-- Part-of-speech information about the entry/sense. Should use appropriate entity codes. In general where there are multiple senses in an entry, the part-of-speech of an earlier sense will apply to later senses unless there is a new part-of-speech
+  indicated. -->
+  <!ELEMENT field (#PCDATA)>
+  <!-- Information about the field of application of the entry/sense. When absent, general application is implied. Entity coding for specific fields of application. -->
+  <!ELEMENT misc (#PCDATA)>
+  <!-- This element is used for other relevant information about the entry/sense. As with part-of-speech, information will usually apply to several senses. -->
+  <!ELEMENT lsource (#PCDATA)>
+  <!-- This element records the information about the source language(s) of a loan-word/gairaigo. If the source language is other than English, the language is indicated by the xml:lang attribute. The element value (if any) is the source word or
+  phrase. -->
+  <!ATTLIST lsource xml:lang CDATA "eng">
+  <!-- The xml:lang attribute defines the language(s) from which a loanword is drawn. It will be coded using the three-letter language code from the ISO 639-2 standard. When absent, the value "eng" (i.e. English) is the default value. The bibliographic
+  (B) codes are used. -->
+  <!ATTLIST lsource ls_type CDATA #IMPLIED>
+  <!-- The ls_type attribute indicates whether the lsource element fully or partially describes the source word or phrase of the loanword. If absent, it will have the implied value of "full". Otherwise it will contain "part". -->
+  <!ATTLIST lsource ls_wasei CDATA #IMPLIED>
+  <!-- The ls_wasei attribute indicates that the Japanese word has been constructed from words in the source language, and not from an actual phrase in that language. Most commonly used to indicate "waseieigo". -->
+  <!ELEMENT dial (#PCDATA)>
+  <!-- For words specifically associated with regional dialects in Japanese, the entity code for that dialect, e.g. ksb for Kansaiben. -->
+  <!ELEMENT gloss (#PCDATA | pri)*>
+  <!-- Within each sense will be one or more "glosses", i.e. target-language words or phrases which are equivalents to the Japanese word. This element would normally be present, however it may be omitted in entries which are purely for a
+  cross-reference. -->
+  <!ATTLIST gloss xml:lang CDATA "eng">
+  <!-- The xml:lang attribute defines the target language of the gloss. It will be coded using the three-letter language code from the ISO 639 standard. When absent, the value "eng" (i.e. English) is the default value. -->
+  <!ATTLIST gloss g_gend CDATA #IMPLIED>
+  <!-- The g_gend attribute defines the gender of the gloss (typically a noun in the target language. When absent, the gender is either not relevant or has yet to be provided. -->
+  <!ATTLIST gloss g_type CDATA #IMPLIED>
+  <!-- The g_type attribute specifies that the gloss is of a particular type, e.g. "lit" (literal), "fig" (figurative), "expl" (explanation). -->
+  <!ELEMENT pri (#PCDATA)>
+  <!-- These elements highlight particular target-language words which are strongly associated with the Japanese word. The purpose is to establish a set of target-language words which can effectively be used as head-words in a reverse
+  target-language/Japanese relationship. -->
+  <!ELEMENT s_inf (#PCDATA)>
+  <!-- The sense-information elements provided for additional information to be recorded about a sense. Typical usage would be to indicate such things as level of currency of a sense, the regional variations, etc. -->
+  <!-- The following entity codes are used for common elements within the various information fields. -->
+  <!-- <dial> (dialect) entities -->
+  <!ENTITY hob "Hokkaido-ben">
+  <!ENTITY ksb "Kansai-ben">
+  <!ENTITY ktb "Kantou-ben">
+  <!ENTITY kyb "Kyoto-ben">
+  <!ENTITY kyu "Kyuushuu-ben">
+  <!ENTITY nab "Nagano-ben">
+  <!ENTITY osb "Osaka-ben">
+  <!ENTITY rkb "Ryuukyuu-ben">
+  <!ENTITY thb "Touhoku-ben">
+  <!ENTITY tsb "Tosa-ben">
+  <!ENTITY tsug "Tsugaru-ben">
+  <!-- <field> entities -->
+  <!ENTITY agric "agriculture">
+  <!ENTITY anat "anatomy">
+  <!ENTITY archeol "archeology">
+  <!ENTITY archit "architecture, building">
+  <!ENTITY art "art, aesthetics">
+  <!ENTITY astron "astronomy">
+  <!ENTITY audvid "audio-visual">
+  <!ENTITY aviat "aviation">
+  <!ENTITY baseb "baseball">
+  <!ENTITY biochem "biochemistry">
+  <!ENTITY biol "biology">
+  <!ENTITY bot "botany">
+  <!ENTITY Buddh "Buddhism">
+  <!ENTITY bus "business">
+  <!ENTITY chem "chemistry">
+  <!ENTITY Christn "Christianity">
+  <!ENTITY comp "computing">
+  <!ENTITY cryst "crystallography">
+  <!ENTITY ecol "ecology">
+  <!ENTITY econ "economics">
+  <!ENTITY elec "electricity, elec. eng.">
+  <!ENTITY electr "electronics">
+  <!ENTITY embryo "embryology">
+  <!ENTITY engr "engineering">
+  <!ENTITY ent "entomology">
+  <!ENTITY finc "finance">
+  <!ENTITY fish "fishing">
+  <!ENTITY food "food, cooking">
+  <!ENTITY gardn "gardening, horticulture">
+  <!ENTITY genet "genetics">
+  <!ENTITY geogr "geography">
+  <!ENTITY geol "geology">
+  <!ENTITY geom "geometry">
+  <!ENTITY go "go (game)">
+  <!ENTITY golf "golf">
+  <!ENTITY gramm "grammar">
+  <!ENTITY grmyth "Greek mythology">
+  <!ENTITY hanaf "hanafuda">
+  <!ENTITY horse "horse-racing">
+  <!ENTITY law "law">
+  <!ENTITY ling "linguistics">
+  <!ENTITY logic "logic">
+  <!ENTITY MA "martial arts">
+  <!ENTITY mahj "mahjong">
+  <!ENTITY math "mathematics">
+  <!ENTITY mech "mechanical engineering">
+  <!ENTITY med "medicine">
+  <!ENTITY met "climate, weather">
+  <!ENTITY mil "military">
+  <!ENTITY music "music">
+  <!ENTITY ornith "ornithology">
+  <!ENTITY paleo "paleontology">
+  <!ENTITY pathol "pathology">
+  <!ENTITY pharm "pharmacy">
+  <!ENTITY phil "philosophy">
+  <!ENTITY photo "photography">
+  <!ENTITY physics "physics">
+  <!ENTITY physiol "physiology">
+  <!ENTITY print "printing">
+  <!ENTITY psych "psychology, psychiatry">
+  <!ENTITY Shinto "Shinto">
+  <!ENTITY shogi "shogi">
+  <!ENTITY sports "sports">
+  <!ENTITY stat "statistics">
+  <!ENTITY sumo "sumo">
+  <!ENTITY telec "telecommunications">
+  <!ENTITY tradem "trademark">
+  <!ENTITY vidg "video game">
+  <!ENTITY zool "zoology">
+  <!-- <ke_inf> (kanji info) entities -->
+  <!ENTITY ateji "ateji (phonetic) reading">
+  <!ENTITY ik "word containing irregular kana usage">
+  <!ENTITY iK "word containing irregular kanji usage">
+  <!ENTITY io "irregular okurigana usage">
+  <!ENTITY oK "word containing out-dated kanji">
+  <!-- <misc> (miscellaneous) entities -->
+  <!ENTITY abbr "abbreviation">
+  <!ENTITY arch "archaism">
+  <!ENTITY char "character">
+  <!ENTITY chn "children's language">
+  <!ENTITY col "colloquialism">
+  <!ENTITY company "company name">
+  <!ENTITY creat "creature">
+  <!ENTITY dated "dated term">
+  <!ENTITY dei "deity">
+  <!ENTITY derog "derogatory">
+  <!ENTITY ev "event">
+  <!ENTITY fam "familiar language">
+  <!ENTITY fem "female term or language">
+  <!ENTITY fict "fiction">
+  <!ENTITY given "given name or forename, gender not specified">
+  <!ENTITY hist "historical term">
+  <!ENTITY hon "honorific or respectful (sonkeigo) language">
+  <!ENTITY hum "humble (kenjougo) language">
+  <!ENTITY id "idiomatic expression">
+  <!ENTITY joc "jocular, humorous term">
+  <!ENTITY leg "legend">
+  <!ENTITY litf "literary or formal term">
+  <!ENTITY m-sl "manga slang">
+  <!ENTITY male "male term or language">
+  <!ENTITY myth "mythology">
+  <!ENTITY net-sl "Internet slang">
+  <!ENTITY obj "object">
+  <!ENTITY obs "obsolete term">
+  <!ENTITY obsc "obscure term">
+  <!ENTITY on-mim "onomatopoeic or mimetic word">
+  <!ENTITY organization "organization name">
+  <!ENTITY oth "other">
+  <!ENTITY person "full name of a particular person">
+  <!ENTITY place "place name">
+  <!ENTITY poet "poetical term">
+  <!ENTITY pol "polite (teineigo) language">
+  <!ENTITY product "product name">
+  <!ENTITY proverb "proverb">
+  <!ENTITY quote "quotation">
+  <!ENTITY rare "rare">
+  <!ENTITY relig "religion">
+  <!ENTITY sens "sensitive">
+  <!ENTITY serv "service">
+  <!ENTITY sl "slang">
+  <!ENTITY station "railway station">
+  <!ENTITY surname "family or surname">
+  <!ENTITY uk "word usually written using kana alone">
+  <!ENTITY unclass "unclassified name">
+  <!ENTITY vulg "vulgar expression or word">
+  <!ENTITY work "work of art, literature, music, etc. name">
+  <!ENTITY X "rude or X-rated term (not displayed in educational software)">
+  <!ENTITY yoji "yojijukugo">
+  <!-- <pos> (part-of-speech) entities -->
+  <!ENTITY adj-f "noun or verb acting prenominally">
+  <!ENTITY adj-i "adjective (keiyoushi)">
+  <!ENTITY adj-ix "adjective (keiyoushi) - yoi/ii class">
+  <!ENTITY adj-kari "'kari' adjective (archaic)">
+  <!ENTITY adj-ku "'ku' adjective (archaic)">
+  <!ENTITY adj-na "adjectival nouns or quasi-adjectives (keiyodoshi)">
+  <!ENTITY adj-nari "archaic/formal form of na-adjective">
+  <!ENTITY adj-no "nouns which may take the genitive case particle 'no'">
+  <!ENTITY adj-pn "pre-noun adjectival (rentaishi)">
+  <!ENTITY adj-shiku "'shiku' adjective (archaic)">
+  <!ENTITY adj-t "'taru' adjective">
+  <!ENTITY adv "adverb (fukushi)">
+  <!ENTITY adv-to "adverb taking the 'to' particle">
+  <!ENTITY aux "auxiliary">
+  <!ENTITY aux-adj "auxiliary adjective">
+  <!ENTITY aux-v "auxiliary verb">
+  <!ENTITY conj "conjunction">
+  <!ENTITY cop "copula">
+  <!ENTITY ctr "counter">
+  <!ENTITY exp "expressions (phrases, clauses, etc.)">
+  <!ENTITY int "interjection (kandoushi)">
+  <!ENTITY n "noun (common) (futsuumeishi)">
+  <!ENTITY n-adv "adverbial noun (fukushitekimeishi)">
+  <!ENTITY n-pr "proper noun">
+  <!ENTITY n-pref "noun, used as a prefix">
+  <!ENTITY n-suf "noun, used as a suffix">
+  <!ENTITY n-t "noun (temporal) (jisoumeishi)">
+  <!ENTITY num "numeric">
+  <!ENTITY pn "pronoun">
+  <!ENTITY pref "prefix">
+  <!ENTITY prt "particle">
+  <!ENTITY suf "suffix">
+  <!ENTITY unc "unclassified">
+  <!ENTITY v-unspec "verb unspecified">
+  <!ENTITY v1 "Ichidan verb">
+  <!ENTITY v1-s "Ichidan verb - kureru special class">
+  <!ENTITY v2a-s "Nidan verb with 'u' ending (archaic)">
+  <!ENTITY v2b-k "Nidan verb (upper class) with 'bu' ending (archaic)">
+  <!ENTITY v2b-s "Nidan verb (lower class) with 'bu' ending (archaic)">
+  <!ENTITY v2d-k "Nidan verb (upper class) with 'dzu' ending (archaic)">
+  <!ENTITY v2d-s "Nidan verb (lower class) with 'dzu' ending (archaic)">
+  <!ENTITY v2g-k "Nidan verb (upper class) with 'gu' ending (archaic)">
+  <!ENTITY v2g-s "Nidan verb (lower class) with 'gu' ending (archaic)">
+  <!ENTITY v2h-k "Nidan verb (upper class) with 'hu/fu' ending (archaic)">
+  <!ENTITY v2h-s "Nidan verb (lower class) with 'hu/fu' ending (archaic)">
+  <!ENTITY v2k-k "Nidan verb (upper class) with 'ku' ending (archaic)">
+  <!ENTITY v2k-s "Nidan verb (lower class) with 'ku' ending (archaic)">
+  <!ENTITY v2m-k "Nidan verb (upper class) with 'mu' ending (archaic)">
+  <!ENTITY v2m-s "Nidan verb (lower class) with 'mu' ending (archaic)">
+  <!ENTITY v2n-s "Nidan verb (lower class) with 'nu' ending (archaic)">
+  <!ENTITY v2r-k "Nidan verb (upper class) with 'ru' ending (archaic)">
+  <!ENTITY v2r-s "Nidan verb (lower class) with 'ru' ending (archaic)">
+  <!ENTITY v2s-s "Nidan verb (lower class) with 'su' ending (archaic)">
+  <!ENTITY v2t-k "Nidan verb (upper class) with 'tsu' ending (archaic)">
+  <!ENTITY v2t-s "Nidan verb (lower class) with 'tsu' ending (archaic)">
+  <!ENTITY v2w-s "Nidan verb (lower class) with 'u' ending and 'we' conjugation (archaic)">
+  <!ENTITY v2y-k "Nidan verb (upper class) with 'yu' ending (archaic)">
+  <!ENTITY v2y-s "Nidan verb (lower class) with 'yu' ending (archaic)">
+  <!ENTITY v2z-s "Nidan verb (lower class) with 'zu' ending (archaic)">
+  <!ENTITY v4b "Yodan verb with 'bu' ending (archaic)">
+  <!ENTITY v4g "Yodan verb with 'gu' ending (archaic)">
+  <!ENTITY v4h "Yodan verb with 'hu/fu' ending (archaic)">
+  <!ENTITY v4k "Yodan verb with 'ku' ending (archaic)">
+  <!ENTITY v4m "Yodan verb with 'mu' ending (archaic)">
+  <!ENTITY v4n "Yodan verb with 'nu' ending (archaic)">
+  <!ENTITY v4r "Yodan verb with 'ru' ending (archaic)">
+  <!ENTITY v4s "Yodan verb with 'su' ending (archaic)">
+  <!ENTITY v4t "Yodan verb with 'tsu' ending (archaic)">
+  <!ENTITY v5aru "Godan verb - -aru special class">
+  <!ENTITY v5b "Godan verb with 'bu' ending">
+  <!ENTITY v5g "Godan verb with 'gu' ending">
+  <!ENTITY v5k "Godan verb with 'ku' ending">
+  <!ENTITY v5k-s "Godan verb - Iku/Yuku special class">
+  <!ENTITY v5m "Godan verb with 'mu' ending">
+  <!ENTITY v5n "Godan verb with 'nu' ending">
+  <!ENTITY v5r "Godan verb with 'ru' ending">
+  <!ENTITY v5r-i "Godan verb with 'ru' ending (irregular verb)">
+  <!ENTITY v5s "Godan verb with 'su' ending">
+  <!ENTITY v5t "Godan verb with 'tsu' ending">
+  <!ENTITY v5u "Godan verb with 'u' ending">
+  <!ENTITY v5u-s "Godan verb with 'u' ending (special class)">
+  <!ENTITY v5uru "Godan verb - Uru old class verb (old form of Eru)">
+  <!ENTITY vi "intransitive verb">
+  <!ENTITY vk "Kuru verb - special class">
+  <!ENTITY vn "irregular nu verb">
+  <!ENTITY vr "irregular ru verb, plain form ends with -ri">
+  <!ENTITY vs "noun or participle which takes the aux. verb suru">
+  <!ENTITY vs-c "su verb - precursor to the modern suru">
+  <!ENTITY vs-i "suru verb - included">
+  <!ENTITY vs-s "suru verb - special class">
+  <!ENTITY vt "transitive verb">
+  <!ENTITY vz "Ichidan verb - zuru verb (alternative form of -jiru verbs)">
+  <!-- <re_inf> (reading info) entities -->
+  <!ENTITY gikun "gikun (meaning as reading) or jukujikun (special kanji reading)">
+  <!ENTITY ik "word containing irregular kana usage">
+  <!ENTITY ok "out-dated or obsolete kana usage">
+  <!ENTITY uK "word usually written using kanji alone">
+]>
+<!-- JMdict created: 2021-04-19 -->
+<JMdict>
+  <entry>
+    <ent_seq>1000000</ent_seq>
+    <r_ele>
+      <reb>ヽ</reb>
+    </r_ele>
+    <sense>
+      <pos>&unc;</pos>
+      <xref>一の字点</xref>
+      <gloss g_type="expl">repetition mark in katakana</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000010</ent_seq>
+    <r_ele>
+      <reb>ヾ</reb>
+    </r_ele>
+    <sense>
+      <pos>&unc;</pos>
+      <gloss g_type="expl">voiced repetition mark in katakana</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000020</ent_seq>
+    <r_ele>
+      <reb>ゝ</reb>
+    </r_ele>
+    <sense>
+      <pos>&unc;</pos>
+      <gloss g_type="expl">repetition mark in hiragana</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000030</ent_seq>
+    <r_ele>
+      <reb>ゞ</reb>
+    </r_ele>
+    <sense>
+      <pos>&unc;</pos>
+      <gloss g_type="expl">voiced repetition mark in hiragana</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000040</ent_seq>
+    <k_ele>
+      <keb>〃</keb>
+    </k_ele>
+    <r_ele>
+      <reb>おなじ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>おなじく</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>ditto mark</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000050</ent_seq>
+    <k_ele>
+      <keb>仝</keb>
+    </k_ele>
+    <r_ele>
+      <reb>どうじょう</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>"as above" mark</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000060</ent_seq>
+    <k_ele>
+      <keb>々</keb>
+    </k_ele>
+    <r_ele>
+      <reb>のま</reb>
+    </r_ele>
+    <r_ele>
+      <reb>ノマ</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&unc;</pos>
+      <xref>同の字点</xref>
+      <gloss g_type="expl">kanji repetition mark</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000080</ent_seq>
+    <k_ele>
+      <keb>漢数字ゼロ</keb>
+    </k_ele>
+    <r_ele>
+      <reb>かんすうじゼロ</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <xref>○・まる・1</xref>
+      <xref>漢数字</xref>
+      <gloss>"kanji" zero</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000090</ent_seq>
+    <k_ele>
+      <keb>○</keb>
+    </k_ele>
+    <k_ele>
+      <keb>〇</keb>
+    </k_ele>
+    <r_ele>
+      <reb>まる</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <xref>丸・まる・1</xref>
+      <gloss>circle (sometimes used for zero)</gloss>
+    </sense>
+    <sense>
+      <pos>&n;</pos>
+      <xref>二重丸・にじゅうまる</xref>
+      <gloss>'correct' (when marking)</gloss>
+    </sense>
+    <sense>
+      <pos>&n;</pos>
+      <xref>〇〇・まるまる・1</xref>
+      <gloss>symbol used as a placeholder (either because a number of other words could be used in that position, or because of censorship)</gloss>
+    </sense>
+    <sense>
+      <pos>&n;</pos>
+      <xref>句点</xref>
+      <gloss>period</gloss>
+      <gloss>full stop</gloss>
+    </sense>
+    <sense>
+      <pos>&n;</pos>
+      <xref>半濁点</xref>
+      <gloss>maru mark</gloss>
+      <gloss>semivoiced sound</gloss>
+      <gloss>p-sound</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000100</ent_seq>
+    <k_ele>
+      <keb>ＡＢＣ順</keb>
+    </k_ele>
+    <r_ele>
+      <reb>エービーシーじゅん</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>alphabetical order</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000110</ent_seq>
+    <k_ele>
+      <keb>ＣＤプレーヤー</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>ＣＤプレイヤー</keb>
+    </k_ele>
+    <r_ele>
+      <reb>シーディープレーヤー</reb>
+      <re_restr>ＣＤプレーヤー</re_restr>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>シーディープレイヤー</reb>
+      <re_restr>ＣＤプレイヤー</re_restr>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>CD player</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000130</ent_seq>
+    <k_ele>
+      <keb>Ｎ響</keb>
+    </k_ele>
+    <r_ele>
+      <reb>エヌきょう</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <misc>&abbr;</misc>
+      <gloss>NHK Symphony Orchestra</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000140</ent_seq>
+    <k_ele>
+      <keb>Ｏバック</keb>
+    </k_ele>
+    <r_ele>
+      <reb>オーバック</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>O-back</gloss>
+      <gloss>skirt with peek-a-boo hole in rump</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000150</ent_seq>
+    <k_ele>
+      <keb>ＲＳ２３２ケーブル</keb>
+    </k_ele>
+    <r_ele>
+      <reb>アールエスにさんにケーブル</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>rs232 cable</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000160</ent_seq>
+    <k_ele>
+      <keb>Ｔシャツ</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>ティーシャツ</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>T-shirt</gloss>
+      <gloss>tee shirt</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000170</ent_seq>
+    <k_ele>
+      <keb>Ｔバック</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>ティーバック</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>T-back</gloss>
+      <gloss>bikini thong</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000200</ent_seq>
+    <k_ele>
+      <keb>あうんの呼吸</keb>
+    </k_ele>
+    <k_ele>
+      <keb>阿吽の呼吸</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あうんのこきゅう</reb>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <pos>&n;</pos>
+      <misc>&id;</misc>
+      <gloss>the harmonizing, mentally and physically, of two parties engaged in an activity</gloss>
+      <gloss>singing from the same hymn-sheet</gloss>
+      <gloss>dancing to the same beat</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000210</ent_seq>
+    <r_ele>
+      <reb>あおば</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <xref>やまびこ</xref>
+      <misc>&obs;</misc>
+      <gloss>(former) regular (stops at every station) Tōhoku-line Shinkansen</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000220</ent_seq>
+    <k_ele>
+      <keb>明白</keb>
+      <ke_pri>ichi1</ke_pri>
+      <ke_pri>news1</ke_pri>
+      <ke_pri>nf10</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>めいはく</reb>
+      <re_pri>ichi1</re_pri>
+      <re_pri>news1</re_pri>
+      <re_pri>nf10</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&adj-na;</pos>
+      <gloss>obvious</gloss>
+      <gloss>clear</gloss>
+      <gloss>plain</gloss>
+      <gloss>evident</gloss>
+      <gloss>apparent</gloss>
+      <gloss>explicit</gloss>
+      <gloss>overt</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000225</ent_seq>
+    <k_ele>
+      <keb>明白</keb>
+      <ke_inf>&ateji;</ke_inf>
+    </k_ele>
+    <k_ele>
+      <keb>偸閑</keb>
+      <ke_inf>&ateji;</ke_inf>
+    </k_ele>
+    <k_ele>
+      <keb>白地</keb>
+      <ke_inf>&ateji;</ke_inf>
+    </k_ele>
+    <r_ele>
+      <reb>あからさま</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-na;</pos>
+      <pos>&adj-no;</pos>
+      <misc>&uk;</misc>
+      <gloss>plain</gloss>
+      <gloss>frank</gloss>
+      <gloss>candid</gloss>
+      <gloss>open</gloss>
+      <gloss>direct</gloss>
+      <gloss>straightforward</gloss>
+      <gloss>unabashed</gloss>
+      <gloss>blatant</gloss>
+      <gloss>flagrant</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000230</ent_seq>
+    <k_ele>
+      <keb>明かん</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あかん</reb>
+    </r_ele>
+    <r_ele>
+      <reb>アカン</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <misc>&uk;</misc>
+      <s_inf>commonly used with adj-i inflections, e.g. あかんかった, あかんくない, etc.</s_inf>
+      <dial>&ksb;</dial>
+      <gloss>useless</gloss>
+      <gloss>no good</gloss>
+      <gloss>hopeless</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000260</ent_seq>
+    <k_ele>
+      <keb>悪どい</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あくどい</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-i;</pos>
+      <xref>あくが強い・あくがつよい・2</xref>
+      <misc>&uk;</misc>
+      <s_inf>あく from 灰汁</s_inf>
+      <gloss>gaudy</gloss>
+      <gloss>showy</gloss>
+      <gloss>garish</gloss>
+      <gloss>loud</gloss>
+    </sense>
+    <sense>
+      <pos>&adj-i;</pos>
+      <misc>&uk;</misc>
+      <gloss>crooked</gloss>
+      <gloss>vicious</gloss>
+      <gloss>wicked</gloss>
+      <gloss>nasty</gloss>
+      <gloss>unscrupulous</gloss>
+      <gloss>dishonest</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000280</ent_seq>
+    <k_ele>
+      <keb>論う</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あげつらう</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5u;</pos>
+      <pos>&vt;</pos>
+      <misc>&uk;</misc>
+      <gloss>to discuss</gloss>
+    </sense>
+    <sense>
+      <pos>&v5u;</pos>
+      <pos>&vt;</pos>
+      <gloss>to find fault with</gloss>
+      <gloss>to criticize</gloss>
+      <gloss>to criticise</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000290</ent_seq>
+    <r_ele>
+      <reb>あさひ</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>Jouetsu line express Shinkansen</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000300</ent_seq>
+    <k_ele>
+      <keb>遇う</keb>
+    </k_ele>
+    <k_ele>
+      <keb>配う</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あしらう</reb>
+    </r_ele>
+    <sense>
+      <stagk>遇う</stagk>
+      <pos>&v5u;</pos>
+      <pos>&vt;</pos>
+      <misc>&uk;</misc>
+      <gloss>to treat</gloss>
+      <gloss>to handle</gloss>
+      <gloss>to deal with</gloss>
+    </sense>
+    <sense>
+      <pos>&v5u;</pos>
+      <pos>&vt;</pos>
+      <misc>&uk;</misc>
+      <gloss>to arrange</gloss>
+      <gloss>to decorate</gloss>
+      <gloss>to dress</gloss>
+      <gloss>to garnish</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000310</ent_seq>
+    <k_ele>
+      <keb>馬酔木</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あせび</reb>
+    </r_ele>
+    <r_ele>
+      <reb>あしび</reb>
+    </r_ele>
+    <r_ele>
+      <reb>あせぼ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>あせぶ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>アセビ</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <misc>&uk;</misc>
+      <gloss>Japanese andromeda (Pieris japonica)</gloss>
+      <gloss>lily-of-the-valley</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000320</ent_seq>
+    <k_ele>
+      <keb>彼処</keb>
+      <ke_pri>ichi1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>彼所</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あそこ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あすこ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>かしこ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>アソコ</reb>
+      <re_nokanji/>
+    </r_ele>
+    <r_ele>
+      <reb>あしこ</reb>
+      <re_inf>&ok;</re_inf>
+    </r_ele>
+    <r_ele>
+      <reb>あこ</reb>
+      <re_inf>&ok;</re_inf>
+    </r_ele>
+    <sense>
+      <pos>&pn;</pos>
+      <xref>どこ・1</xref>
+      <xref>ここ・1</xref>
+      <xref>そこ・1</xref>
+      <misc>&uk;</misc>
+      <s_inf>place physically distant from both speaker and listener</s_inf>
+      <gloss>there</gloss>
+      <gloss>over there</gloss>
+      <gloss>that place</gloss>
+      <gloss>yonder</gloss>
+      <gloss>you-know-where</gloss>
+    </sense>
+    <sense>
+      <stagr>あそこ</stagr>
+      <stagr>あすこ</stagr>
+      <stagr>アソコ</stagr>
+      <pos>&n;</pos>
+      <misc>&col;</misc>
+      <misc>&uk;</misc>
+      <gloss>genitals</gloss>
+      <gloss>private parts</gloss>
+      <gloss>nether regions</gloss>
+    </sense>
+    <sense>
+      <pos>&n;</pos>
+      <xref>あれほど</xref>
+      <misc>&uk;</misc>
+      <s_inf>something psychologically distant from both speaker and listener</s_inf>
+      <gloss>that far</gloss>
+      <gloss>that much</gloss>
+      <gloss>that point</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000360</ent_seq>
+    <r_ele>
+      <reb>あっさり</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>アッサリ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adv-to;</pos>
+      <pos>&vs;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>easily</gloss>
+      <gloss>readily</gloss>
+      <gloss>quickly</gloss>
+      <gloss>flatly (refuse)</gloss>
+    </sense>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adv-to;</pos>
+      <pos>&vs;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>lightly (seasoned food, applied make-up, etc.)</gloss>
+      <gloss>plainly</gloss>
+      <gloss>simply</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000390</ent_seq>
+    <k_ele>
+      <keb>あっという間に</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>あっと言う間に</keb>
+    </k_ele>
+    <k_ele>
+      <keb>あっとゆう間に</keb>
+    </k_ele>
+    <k_ele>
+      <keb>アッという間に</keb>
+    </k_ele>
+    <k_ele>
+      <keb>アッと言う間に</keb>
+    </k_ele>
+    <k_ele>
+      <keb>アッとゆう間に</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あっというまに</reb>
+      <re_restr>あっという間に</re_restr>
+      <re_restr>あっと言う間に</re_restr>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あっとゆうまに</reb>
+      <re_restr>あっと言う間に</re_restr>
+      <re_restr>あっとゆう間に</re_restr>
+    </r_ele>
+    <r_ele>
+      <reb>アッというまに</reb>
+      <re_restr>アッという間に</re_restr>
+      <re_restr>アッと言う間に</re_restr>
+    </r_ele>
+    <r_ele>
+      <reb>アッとゆうまに</reb>
+      <re_restr>アッと言う間に</re_restr>
+      <re_restr>アッとゆう間に</re_restr>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <pos>&adv;</pos>
+      <gloss>just like that</gloss>
+      <gloss>in the twinkling of an eye</gloss>
+      <gloss>in the blink of an eye</gloss>
+      <gloss g_type="lit">in the time it takes to say "ah!"</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000400</ent_seq>
+    <r_ele>
+      <reb>あっぷあっぷ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adv-to;</pos>
+      <pos>&vs;</pos>
+      <gloss>floundering while nearly drowning</gloss>
+    </sense>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adv-to;</pos>
+      <pos>&vs;</pos>
+      <gloss>suffering</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000410</ent_seq>
+    <r_ele>
+      <reb>あどけない</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-i;</pos>
+      <gloss>innocent</gloss>
+      <gloss>cherubic</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000420</ent_seq>
+    <k_ele>
+      <keb>彼の</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>あの</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あん</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&adj-pn;</pos>
+      <xref>どの</xref>
+      <xref>この・1</xref>
+      <xref>その・1</xref>
+      <misc>&uk;</misc>
+      <s_inf>someone or something distant from both speaker and listener, or situation unfamiliar to both speaker and listener</s_inf>
+      <gloss>that</gloss>
+      <gloss>those</gloss>
+      <gloss>the</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000430</ent_seq>
+    <r_ele>
+      <reb>あの</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あのー</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あのう</reb>
+    </r_ele>
+    <sense>
+      <pos>&int;</pos>
+      <gloss>say</gloss>
+      <gloss>well</gloss>
+      <gloss>um</gloss>
+      <gloss>er</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000440</ent_seq>
+    <k_ele>
+      <keb>あの人</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>彼の人</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あのひと</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&pn;</pos>
+      <s_inf>sometimes of one's spouse or partner</s_inf>
+      <gloss>he</gloss>
+      <gloss>she</gloss>
+      <gloss>that person</gloss>
+    </sense>
+    <sense>
+      <pos>&pn;</pos>
+      <misc>&arch;</misc>
+      <gloss>you</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000450</ent_seq>
+    <k_ele>
+      <keb>あの方</keb>
+      <ke_pri>spec1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>彼の方</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あのかた</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&pn;</pos>
+      <misc>&hon;</misc>
+      <gloss>that gentleman</gloss>
+      <gloss>that lady</gloss>
+      <gloss>he</gloss>
+      <gloss>she</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000460</ent_seq>
+    <k_ele>
+      <keb>溢れる</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あぶれる</reb>
+    </r_ele>
+    <sense>
+      <pos>&v1;</pos>
+      <pos>&vi;</pos>
+      <misc>&uk;</misc>
+      <gloss>to fail (in getting a job)</gloss>
+      <gloss>to miss out (at fishing, hunting, etc.)</gloss>
+    </sense>
+    <sense>
+      <pos>&v1;</pos>
+      <pos>&vi;</pos>
+      <misc>&uk;</misc>
+      <gloss>to be left out</gloss>
+      <gloss>to be crowded out</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000470</ent_seq>
+    <r_ele>
+      <reb>あべこべ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&adj-no;</pos>
+      <pos>&adj-na;</pos>
+      <pos>&n;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>contrary</gloss>
+      <gloss>opposite</gloss>
+      <gloss>inverse</gloss>
+      <gloss>reverse</gloss>
+      <gloss>back-to-front</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000480</ent_seq>
+    <k_ele>
+      <keb>阿呆陀羅</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あほんだら</reb>
+    </r_ele>
+    <r_ele>
+      <reb>あほだら</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <misc>&uk;</misc>
+      <dial>&ksb;</dial>
+      <gloss>fool</gloss>
+      <gloss>oaf</gloss>
+      <gloss>airhead</gloss>
+    </sense>
+    <sense>
+      <stagr>あほだら</stagr>
+      <pos>&n;</pos>
+      <xref>あほだら経</xref>
+      <misc>&abbr;</misc>
+      <gloss g_type="expl">type of fast-paced humorous singing mimicking the chanting of a Buddhist sutra, usually with lyrics satirizing current events</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000490</ent_seq>
+    <k_ele>
+      <keb>甘子</keb>
+    </k_ele>
+    <k_ele>
+      <keb>天魚</keb>
+    </k_ele>
+    <k_ele>
+      <keb>雨子</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あまご</reb>
+    </r_ele>
+    <r_ele>
+      <reb>アマゴ</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <xref>皐月鱒</xref>
+      <misc>&uk;</misc>
+      <gloss>land-locked variety of red-spotted masu trout (Oncorhynchus masou ishikawae)</gloss>
+      <gloss>amago</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000500</ent_seq>
+    <r_ele>
+      <reb>あやす</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5s;</pos>
+      <pos>&vt;</pos>
+      <gloss>to cuddle</gloss>
+      <gloss>to comfort</gloss>
+      <gloss>to rock</gloss>
+      <gloss>to soothe</gloss>
+      <gloss>to dandle</gloss>
+      <gloss>to humor</gloss>
+      <gloss>to humour</gloss>
+      <gloss>to lull</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000510</ent_seq>
+    <r_ele>
+      <reb>あやふや</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&adj-na;</pos>
+      <pos>&n;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>uncertain</gloss>
+      <gloss>vague</gloss>
+      <gloss>ambiguous</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000520</ent_seq>
+    <r_ele>
+      <reb>あら</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&int;</pos>
+      <misc>&fem;</misc>
+      <gloss>oh</gloss>
+      <gloss>ah</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000525</ent_seq>
+    <k_ele>
+      <keb>𩺊</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あら</reb>
+    </r_ele>
+    <r_ele>
+      <reb>アラ</reb>
+      <re_nokanji/>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <misc>&uk;</misc>
+      <gloss>saw-edged perch (Niphon spinosus)</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000580</ent_seq>
+    <k_ele>
+      <keb>彼</keb>
+      <ke_pri>ichi1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>彼れ</keb>
+    </k_ele>
+    <r_ele>
+      <reb>あれ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>あ</reb>
+      <re_restr>彼</re_restr>
+      <re_inf>&ok;</re_inf>
+    </r_ele>
+    <sense>
+      <pos>&pn;</pos>
+      <xref>これ・1</xref>
+      <xref>それ・1</xref>
+      <xref>どれ・1</xref>
+      <misc>&uk;</misc>
+      <s_inf>indicating something distant from both speaker and listener (in space, time or psychologically), or something understood without naming it directly</s_inf>
+      <gloss>that</gloss>
+      <gloss>that thing</gloss>
+    </sense>
+    <sense>
+      <pos>&pn;</pos>
+      <misc>&uk;</misc>
+      <s_inf>used to refer to one's equals or inferiors</s_inf>
+      <gloss>that person</gloss>
+    </sense>
+    <sense>
+      <pos>&pn;</pos>
+      <misc>&uk;</misc>
+      <gloss>then</gloss>
+      <gloss>that time</gloss>
+    </sense>
+    <sense>
+      <pos>&pn;</pos>
+      <misc>&uk;</misc>
+      <gloss>that place (over there)</gloss>
+    </sense>
+    <sense>
+      <stagr>あれ</stagr>
+      <pos>&n;</pos>
+      <misc>&col;</misc>
+      <gloss>down there (i.e. one's genitals)</gloss>
+    </sense>
+    <sense>
+      <stagr>あれ</stagr>
+      <pos>&n;</pos>
+      <misc>&col;</misc>
+      <gloss>period</gloss>
+      <gloss>menses</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000590</ent_seq>
+    <r_ele>
+      <reb>あんな</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&adj-pn;</pos>
+      <xref>あんなに</xref>
+      <xref>こんな</xref>
+      <xref>そんな・1</xref>
+      <xref>どんな・1</xref>
+      <s_inf>about something or someone distant from both speaker and listener, or about a situation unfamiliar to both speaker and listener</s_inf>
+      <gloss>that sort of</gloss>
+      <gloss>that kind of</gloss>
+      <gloss>like that</gloss>
+      <gloss>such</gloss>
+      <gloss>so</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000600</ent_seq>
+    <k_ele>
+      <keb>いい加減にしなさい</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いいかげんにしなさい</reb>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <gloss>shape up!</gloss>
+      <gloss>act properly!</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000610</ent_seq>
+    <k_ele>
+      <keb>いい年をして</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いいとしをして</reb>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <xref>いい年して</xref>
+      <gloss>(in spite of) being old enough to know better</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000620</ent_seq>
+    <k_ele>
+      <keb>否々</keb>
+      <ke_pri>ichi1</ke_pri>
+    </k_ele>
+    <k_ele>
+      <keb>否否</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いやいや</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>いえいえ</reb>
+    </r_ele>
+    <sense>
+      <pos>&int;</pos>
+      <xref>嫌々・いやいや・3</xref>
+      <misc>&uk;</misc>
+      <gloss>no!</gloss>
+      <gloss>no no!</gloss>
+      <gloss>no, not at all</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000630</ent_seq>
+    <k_ele>
+      <keb>如何わしい</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いかがわしい</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-i;</pos>
+      <misc>&uk;</misc>
+      <gloss>suspicious</gloss>
+      <gloss>dubious</gloss>
+      <gloss>unreliable</gloss>
+    </sense>
+    <sense>
+      <pos>&adj-i;</pos>
+      <misc>&uk;</misc>
+      <gloss>indecent</gloss>
+      <gloss>unseemly</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000640</ent_seq>
+    <r_ele>
+      <reb>いかす</reb>
+    </r_ele>
+    <r_ele>
+      <reb>イカす</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5s;</pos>
+      <pos>&vi;</pos>
+      <gloss>to be smart</gloss>
+      <gloss>to be cool</gloss>
+      <gloss>to be sharp</gloss>
+      <gloss>to be stylish</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000650</ent_seq>
+    <k_ele>
+      <keb>いかなる場合でも</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いかなるばあいでも</reb>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <gloss>in any case</gloss>
+      <gloss>whatever the case may be</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000660</ent_seq>
+    <k_ele>
+      <keb>如何にも</keb>
+      <ke_pri>ichi1</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>いかにも</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <misc>&uk;</misc>
+      <s_inf>indicating emotive conviction</s_inf>
+      <gloss>indeed</gloss>
+      <gloss>really</gloss>
+      <gloss>truly</gloss>
+      <gloss>just (like)</gloss>
+    </sense>
+    <sense>
+      <pos>&adv;</pos>
+      <misc>&uk;</misc>
+      <gloss>very</gloss>
+      <gloss>extremely</gloss>
+      <gloss>totally</gloss>
+      <gloss>terribly</gloss>
+    </sense>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&int;</pos>
+      <misc>&uk;</misc>
+      <s_inf>indicating agreement</s_inf>
+      <gloss>absolutely</gloss>
+      <gloss>certainly</gloss>
+      <gloss>for sure</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000710</ent_seq>
+    <k_ele>
+      <keb>幾つも</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いくつも</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adj-no;</pos>
+      <misc>&uk;</misc>
+      <gloss>many</gloss>
+      <gloss>much</gloss>
+      <gloss>plenty</gloss>
+    </sense>
+    <sense>
+      <pos>&adv;</pos>
+      <misc>&uk;</misc>
+      <s_inf>in neg. sentence</s_inf>
+      <gloss>hardly</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000730</ent_seq>
+    <k_ele>
+      <keb>行けない</keb>
+      <ke_pri>ichi1</ke_pri>
+    </k_ele>
+    <r_ele>
+      <reb>いけない</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <misc>&uk;</misc>
+      <gloss>wrong</gloss>
+      <gloss>not good</gloss>
+      <gloss>of no use</gloss>
+    </sense>
+    <sense>
+      <pos>&exp;</pos>
+      <misc>&uk;</misc>
+      <gloss>hopeless</gloss>
+      <gloss>past hope</gloss>
+    </sense>
+    <sense>
+      <pos>&exp;</pos>
+      <misc>&uk;</misc>
+      <gloss>must not do</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000740</ent_seq>
+    <r_ele>
+      <reb>いごっそう</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <dial>&tsb;</dial>
+      <gloss>stubborn person</gloss>
+      <gloss>strong-minded person</gloss>
+      <gloss>obstinate person</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000750</ent_seq>
+    <r_ele>
+      <reb>いざ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&int;</pos>
+      <gloss>now</gloss>
+      <gloss>come (now)</gloss>
+      <gloss>well</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000760</ent_seq>
+    <r_ele>
+      <reb>いざこざ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>イザコザ</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <gloss>trouble</gloss>
+      <gloss>quarrel</gloss>
+      <gloss>difficulties</gloss>
+      <gloss>complication</gloss>
+      <gloss>tangle</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000770</ent_seq>
+    <r_ele>
+      <reb>イジイジ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>いじいじ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&adv-to;</pos>
+      <pos>&vs;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>hesitantly</gloss>
+      <gloss>timidly</gloss>
+      <gloss>diffidently</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000780</ent_seq>
+    <r_ele>
+      <reb>いじける</reb>
+    </r_ele>
+    <sense>
+      <pos>&v1;</pos>
+      <pos>&vi;</pos>
+      <gloss>to grow timid</gloss>
+      <gloss>to cower</gloss>
+      <gloss>to shrink</gloss>
+      <gloss>to lose one's nerve</gloss>
+    </sense>
+    <sense>
+      <pos>&v1;</pos>
+      <pos>&vi;</pos>
+      <gloss>to become perverse</gloss>
+      <gloss>to become contrary</gloss>
+      <gloss>to become warped</gloss>
+      <gloss>to become withdrawn</gloss>
+    </sense>
+    <sense>
+      <pos>&v1;</pos>
+      <pos>&vi;</pos>
+      <gloss>to be cramped</gloss>
+      <gloss>to be constrained</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000790</ent_seq>
+    <r_ele>
+      <reb>いじましい</reb>
+    </r_ele>
+    <r_ele>
+      <reb>いぢましい</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-i;</pos>
+      <gloss>piddling</gloss>
+      <gloss>paltry</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000800</ent_seq>
+    <r_ele>
+      <reb>いじらしい</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-i;</pos>
+      <gloss>lovable</gloss>
+      <gloss>sweet</gloss>
+      <gloss>charming</gloss>
+    </sense>
+    <sense>
+      <pos>&adj-i;</pos>
+      <gloss>pitiful</gloss>
+      <gloss>pathetic</gloss>
+      <gloss>touching</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000810</ent_seq>
+    <k_ele>
+      <keb>いじり回す</keb>
+    </k_ele>
+    <k_ele>
+      <keb>弄り回す</keb>
+    </k_ele>
+    <k_ele>
+      <keb>弄りまわす</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いじりまわす</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5s;</pos>
+      <gloss>to tinker with</gloss>
+      <gloss>to fumble with</gloss>
+      <gloss>to twist up</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000820</ent_seq>
+    <r_ele>
+      <reb>いそいそ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>イソイソ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv-to;</pos>
+      <pos>&adv;</pos>
+      <pos>&vs;</pos>
+      <misc>&on-mim;</misc>
+      <gloss>cheerfully</gloss>
+      <gloss>excitedly</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000830</ent_seq>
+    <r_ele>
+      <reb>イチャイチャ</reb>
+    </r_ele>
+    <r_ele>
+      <reb>いちゃいちゃ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <pos>&vs;</pos>
+      <gloss>flirting</gloss>
+      <gloss>making out</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000840</ent_seq>
+    <r_ele>
+      <reb>いちゃつく</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5k;</pos>
+      <pos>&vi;</pos>
+      <gloss>to flirt with</gloss>
+      <gloss>to dally</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000860</ent_seq>
+    <k_ele>
+      <keb>何時もより</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いつもより</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <misc>&uk;</misc>
+      <gloss>more than usual</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000870</ent_seq>
+    <k_ele>
+      <keb>いとも簡単に</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いともかんたんに</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <gloss>very easily</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000880</ent_seq>
+    <k_ele>
+      <keb>鯔背</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いなせ</reb>
+    </r_ele>
+    <sense>
+      <pos>&adj-na;</pos>
+      <misc>&uk;</misc>
+      <gloss>gallant</gloss>
+      <gloss>dashing</gloss>
+      <gloss>smart</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000885</ent_seq>
+    <k_ele>
+      <keb>嘶く</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いななく</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5k;</pos>
+      <pos>&vi;</pos>
+      <gloss>to neigh</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000890</ent_seq>
+    <k_ele>
+      <keb>嘶き</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いななき</reb>
+    </r_ele>
+    <sense>
+      <pos>&n;</pos>
+      <misc>&uk;</misc>
+      <gloss>neigh</gloss>
+      <gloss>whinny</gloss>
+      <gloss>bray</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000900</ent_seq>
+    <r_ele>
+      <reb>いびる</reb>
+    </r_ele>
+    <sense>
+      <pos>&v5r;</pos>
+      <pos>&vt;</pos>
+      <gloss>to pick on</gloss>
+      <gloss>to tease</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000910</ent_seq>
+    <k_ele>
+      <keb>嫌に</keb>
+    </k_ele>
+    <k_ele>
+      <keb>厭に</keb>
+    </k_ele>
+    <r_ele>
+      <reb>いやに</reb>
+    </r_ele>
+    <sense>
+      <pos>&adv;</pos>
+      <misc>&uk;</misc>
+      <gloss>awfully</gloss>
+      <gloss>terribly</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000920</ent_seq>
+    <r_ele>
+      <reb>いらっしゃい</reb>
+      <re_pri>spec1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>いらしゃい</reb>
+      <re_inf>&ik;</re_inf>
+    </r_ele>
+    <sense>
+      <pos>&int;</pos>
+      <xref>いらっしゃる・1</xref>
+      <misc>&hon;</misc>
+      <s_inf>used as a polite imperative</s_inf>
+      <gloss>come</gloss>
+      <gloss>go</gloss>
+      <gloss>stay</gloss>
+    </sense>
+    <sense>
+      <pos>&int;</pos>
+      <xref>いらっしゃいませ</xref>
+      <gloss>welcome</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000930</ent_seq>
+    <r_ele>
+      <reb>いらっしゃいませ</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <r_ele>
+      <reb>いらしゃいませ</reb>
+      <re_inf>&ik;</re_inf>
+    </r_ele>
+    <sense>
+      <pos>&exp;</pos>
+      <s_inf>used in shops, restaurants, etc.</s_inf>
+      <gloss>welcome</gloss>
+    </sense>
+  </entry>
+  <entry>
+    <ent_seq>1000940</ent_seq>
+    <r_ele>
+      <reb>いらっしゃる</reb>
+      <re_pri>ichi1</re_pri>
+    </r_ele>
+    <sense>
+      <pos>&v5aru;</pos>
+      <pos>&vi;</pos>
+      <misc>&hon;</misc>
+      <s_inf>sometimes erroneously written 居らっしゃる</s_inf>
+      <gloss>to come</gloss>
+      <gloss>to go</gloss>
+      <gloss>to be (somewhere)</gloss>
+    </sense>
+    <sense>
+      <pos>&v5aru;</pos>
+      <pos>&aux-v;</pos>
+      <misc>&hon;</misc>
+      <s_inf>after a -te form, or the particle "de"</s_inf>
+      <gloss>to be (doing)</gloss>
+    </sense>
+  </entry>
+  <entry>
