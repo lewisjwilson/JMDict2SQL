@@ -1,10 +1,12 @@
 #!/usr/bin/env python3
 
 import xml.etree.ElementTree as ET
+from db_creator import create_database, insert_data
 
 tree = ET.parse('JMdict_e')
 root = tree.getroot() #root = <JMDict>
 
+create_database()
 
 for entry in root.findall('entry'):
 
@@ -13,16 +15,25 @@ for entry in root.findall('entry'):
     xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
     lsource_list, dial_list, gloss_list, s_inf_list = ([] for i in range(4))
 
+    keb = ""
+    ke_inf = ""
+    ke_pri = ""
+    reb = ""
+    re_nokanji = ""
+    re_inf = ""
+    re_pri = ""
+
     # unique id for each entry
     ent_seq = entry.find('ent_seq').text
 
     # ---------kanji elements-----------
+    count = 0
     for k_ele in entry.findall('k_ele'):
-        k_ele_list.append(k_ele)
+        count += 1
+        k_ele_list.append(count)
 
     #if the element list isnt empty
     if len(k_ele_list) > 0:
-        k_ele_list = []
 
         #for all kanji elements
         for k_ele in entry.findall('k_ele'):
@@ -35,13 +46,13 @@ for entry in root.findall('entry'):
                 # orthography details
                 ke_inf = k_ele.find('ke_inf').text
             except:
-                print('', end='') # print nothing
+                pass
 
             try:
                 # priority of the kanji entry
                 ke_pri = k_ele.find('ke_pri').text
             except:
-                print('', end='') #print nothing
+                pass
 
     # ---------reading elements-----------
     for r_ele in entry.findall('r_ele'):
@@ -53,7 +64,7 @@ for entry in root.findall('entry'):
             # shows that reb is not the true reading
             re_nokanji = r_ele.find('re_nokanji').text
         except:
-            print('', end='') #print nothing
+            pass
 
         # reading applies to subset of keb elements
         for re_restr in r_ele.findall('re_restr'):
@@ -69,13 +80,13 @@ for entry in root.findall('entry'):
             # unusual aspects
             re_inf = r_ele.find('re_inf').text
         except:
-            print('', end='') #print nothing
+            pass
 
         try:
             # priority of the reading entry
             re_pri = r_ele.find('re_pri').text
         except:
-            print('', end='') #print nothing
+            pass
 
     # ---------sense elements-----------
     for sense in entry.findall('sense'):
@@ -174,7 +185,9 @@ for entry in root.findall('entry'):
         for s_inf in sense.findall('s_inf'):
             s_inf_list.append(s_inf.text)
 
-    
+    insert_data(ent_seq, k_ele_list, keb, ke_inf, ke_pri, r_ele_list, reb, re_nokanji,
+                re_restr_list, re_inf, re_pri)
+
     # purge lists
     k_ele_list, r_ele_list, re_restr_list, stagr_list, stagk_list = ([] for i in range(5))
     xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
