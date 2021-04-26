@@ -1,17 +1,20 @@
 #!/usr/bin/env python3
 
 import xml.etree.ElementTree as ET
-from db_creator import create_database, insert_data
+from db_creator import *
 
 tree = ET.parse('JMdict_e')
 root = tree.getroot() #root = <JMDict>
 
 create_database()
+conn = create_connection(r"sqlite.db")
+
+sql_data = []
 
 for entry in root.findall('entry'):
 
     #initialize lists for elements with possible duplicates
-    k_ele_list, r_ele_list, re_restr_list, stagr_list, stagk_list = ([] for i in range(5))
+    k_ele_list, r_ele_list, re_restr_list, sense_list, stagr_list, stagk_list = ([] for i in range(6))
     xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
     lsource_list, dial_list, gloss_list, s_inf_list = ([] for i in range(4))
 
@@ -56,6 +59,7 @@ for entry in root.findall('entry'):
 
     # ---------reading elements-----------
     for r_ele in entry.findall('r_ele'):
+        r_ele_list.append(r_ele.text)
 
         # [no_duplicates] kana readings
         reb = r_ele.find('reb').text
@@ -180,15 +184,18 @@ for entry in root.findall('entry'):
                                 ', gender: ' + g_gend +
                                 ', type: ' + g_type)
 
-
         # sense information (frequency of senses, regional variations etc.)
         for s_inf in sense.findall('s_inf'):
             s_inf_list.append(s_inf.text)
 
-    insert_data(ent_seq, k_ele_list, keb, ke_inf, ke_pri, r_ele_list, reb, re_nokanji,
-                re_restr_list, re_inf, re_pri)
+    # sql_data.append((ent_seq, "k_ele_list", ke_inf, ke_pri, "r_ele_list", reb,
+    #                re_nokanji, "re_restr_list", re_inf, re_pri, "sense_list"))
+    # insert_data(conn, ent_seq, k_ele_list, keb, ke_inf, ke_pri, r_ele_list, reb, re_nokanji,
+    #             re_restr_list, re_inf, re_pri, sense_list)
 
     # purge lists
-    k_ele_list, r_ele_list, re_restr_list, stagr_list, stagk_list = ([] for i in range(5))
+    k_ele_list, r_ele_list, re_restr_list, sense_list, stagr_list, stagk_list = ([] for i in range(6))
     xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
     lsource_list, dial_list, gloss_list, s_inf_list = ([] for i in range(4))
+
+# insert_data(conn, sql_data)
