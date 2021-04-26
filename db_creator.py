@@ -23,15 +23,50 @@ def create_table(conn, create_table_sql):
     except Error as e:
         print(e)
 
-def insert_data(conn, data_list):
+def insert_data(conn, table_name, data_list):
 
-    sql = ''' INSERT INTO JMdict_e(ent_seq, k_ele_list, ke_inf, ke_pri, r_ele_list, reb,
-                    re_nokanji, re_restr_list, re_inf, re_pri, sense_list)
-              VALUES(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?) '''
+    sql = insert_data_sql(table_name)
+
+    if(sql == "TABLE_NOT_FOUND"):
+        print("Table: '" + table_name + "' does not exist. Exiting program.")
+        exit()
+
     cur = conn.cursor()
     cur.executemany(sql, data_list)
     conn.commit()
     return cur.lastrowid
+
+
+# function for changing sql based on table inserting into
+def insert_data_sql(table_name):
+    return{
+        'entry': ''' INSERT INTO entry(ent_seq) VALUES(?) ''',
+        # ------------------------------k_ele tables---------------------------------
+        'k_ele': ''' INSERT INTO k_ele(ent_seq, keb) VALUES(?, ?) ''',
+        'ke_inf': ''' INSERT INTO ke_inf(k_ele_id, value) VALUES(?, ?) ''',
+        'ke_pri': ''' INSERT INTO ke_pri(k_ele_id, value) VALUES(?, ?) ''',
+        # ------------------------------r_ele tables---------------------------------
+        'r_ele': ''' INSERT INTO r_ele(ent_seq, reb, no_kanji) VALUES(?, ?, ?) ''',
+        're_restr': ''' INSERT INTO re_restr(r_ele_id, value) VALUES(?, ?) ''',
+        're_inf': ''' INSERT INTO re_inf(r_ele_id, value) VALUES(?, ?) ''',
+        're_pri': ''' INSERT INTO re_pri(r_ele_id, value) VALUES(?, ?) ''',
+        # ------------------------------senses tables---------------------------------
+        'sense': ''' INSERT INTO sense(ent_seq) VALUES(?) ''',
+        'stagk': ''' INSERT INTO stagk(sense_id, value) VALUES(?, ?) ''',
+        'stagr': ''' INSERT INTO stagr(sense_id, value) VALUES(?, ?) ''',
+        'pos': ''' INSERT INTO pos(sense_id, value) VALUES(?, ?) ''',
+        'xref': ''' INSERT INTO xref(sense_id, value) VALUES(?, ?) ''',
+        'ant': ''' INSERT INTO ant(sense_id, value) VALUES(?, ?) ''',
+        'field': ''' INSERT INTO field(sense_id, value) VALUES(?, ?) ''',
+        'misc': ''' INSERT INTO misc(sense_id, value) VALUES(?, ?) ''',
+        'lsource': ''' INSERT INTO lsource(sense_id, origin, lang, ls_type, ls_wasei) VALUES(?, ?, ?, ?, ?) ''',
+        'dial': ''' INSERT INTO dial(sense_id, value) VALUES(?, ?) ''',
+        'gloss': ''' INSERT INTO gloss(sense_id, definition, lang, g_gend, g_type) VALUES(?, ?, ?, ?, ?) ''',
+        's_inf': ''' INSERT INTO s_inf(sense_id, value) VALUES(?, ?) ''',
+
+        'pri': ''' INSERT INTO pri(gloss_id, value) VALUES(?, ?) '''
+
+    }.get(table_name, "TABLE_NOT_FOUND")
 
 def create_database():
     database = r"sqlite.db"
@@ -95,6 +130,15 @@ def create_database():
 
                                         ); """)
 
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS re_inf (
+                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        r_ele_id INTEGER,
+                                        value TEXT,
+
+                                        FOREIGN KEY(r_ele_id) REFERENCES r_ele(id)
+
+                                        ); """)
+
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS re_pri (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         r_ele_id INTEGER,
@@ -115,15 +159,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stag_k (
-                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        sense_id INTEGER,
-
-                                        FOREIGN KEY(sense_id) REFERENCES sense(id)
-
-                                        ); """)
-
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stag_r (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stagk (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -132,7 +168,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stag_k (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stagr (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -198,6 +234,7 @@ def create_database():
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS lsource (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
+                                        origin text,
                                         lang TEXT,
                                         ls_type TEXT,
                                         ls_wasei TEXT,
@@ -218,7 +255,7 @@ def create_database():
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS gloss (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
-                                        value TEXT,
+                                        definition TEXT,
                                         lang TEXT,
                                         g_gend TEXT,
                                         g_type TEXT,
@@ -226,6 +263,18 @@ def create_database():
 
 
                                         FOREIGN KEY(sense_id) REFERENCES sense(id)
+
+                                        ); """)
+
+
+
+
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS pri (
+                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        gloss_id INTEGER,
+                                        value TEXT,
+
+                                        FOREIGN KEY(gloss_id) REFERENCES gloss(id)
 
                                         ); """)
 

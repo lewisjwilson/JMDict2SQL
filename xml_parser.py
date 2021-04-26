@@ -9,22 +9,23 @@ root = tree.getroot() #root = <JMDict>
 create_database()
 conn = create_connection(r"sqlite.db")
 
-sql_data = []
+k_ele_id = 0
+r_ele_id = 0
+sense_id = 0
+gloss_id = 0
+
+entry_data, k_ele_data, r_ele_data, sense_data = ([] for i in range(4))
+ke_inf_data, ke_pri_data, re_inf_data, re_restr_data = ([] for i in range(4))
+re_pri_data, stagk_data, stagr_data, pos_data = ([] for i in range(4))
+xref_data, ant_data, field_data, misc_data = ([] for i in range(4))
+lsource_data, dial_data, gloss_data, s_inf_data = ([] for i in range(4))
+pri_data = []
 
 for entry in root.findall('entry'):
 
     #initialize lists for elements with possible duplicates
-    k_ele_list, r_ele_list, re_restr_list, sense_list, stagr_list, stagk_list = ([] for i in range(6))
-    xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
-    lsource_list, dial_list, gloss_list, s_inf_list = ([] for i in range(4))
+    k_ele_list, re_restr_list = ([] for i in range(2))
 
-    keb = ""
-    ke_inf = ""
-    ke_pri = ""
-    reb = ""
-    re_nokanji = ""
-    re_inf = ""
-    re_pri = ""
 
     # unique id for each entry
     ent_seq = entry.find('ent_seq').text
@@ -43,32 +44,36 @@ for entry in root.findall('entry'):
 
             # [no_duplicates] japanese with at least one non-kana char
             keb = k_ele.find('keb').text
+            k_ele_data.append((ent_seq, keb))
+            k_ele_id += 1
 
             # try indicates that the element may not exist
             try:
                 # orthography details
                 ke_inf = k_ele.find('ke_inf').text
+                ke_inf_data.append((k_ele_id, ke_inf))
             except:
                 pass
 
             try:
                 # priority of the kanji entry
                 ke_pri = k_ele.find('ke_pri').text
+                ke_pri_data.append((k_ele_id, ke_pri))
             except:
                 pass
 
     # ---------reading elements-----------
     for r_ele in entry.findall('r_ele'):
-        r_ele_list.append(r_ele.text)
 
         # [no_duplicates] kana readings
         reb = r_ele.find('reb').text
+        no_kanji = r_ele.find('re_nokanji')
+        if no_kanji is not None:
+            r_ele_data.append((ent_seq, reb, 1))
+        else:
+            r_ele_data.append((ent_seq, reb, 0))
 
-        try:
-            # shows that reb is not the true reading
-            re_nokanji = r_ele.find('re_nokanji').text
-        except:
-            pass
+        r_ele_id += 1
 
         # reading applies to subset of keb elements
         for re_restr in r_ele.findall('re_restr'):
@@ -79,48 +84,53 @@ for entry in root.findall('entry'):
             for re_restr in r_ele.findall('re_restr'):
                 # reading applies to subset of keb elements
                 re_restr = re_restr.text
+                re_restr_data.append((r_ele_id, re_restr))
 
         try:
             # unusual aspects
             re_inf = r_ele.find('re_inf').text
+            re_inf_data.append((r_ele_id, re_inf))
         except:
             pass
 
         try:
             # priority of the reading entry
             re_pri = r_ele.find('re_pri').text
+            re_pri_data.append((r_ele_id, re_pri))
         except:
             pass
 
     # ---------sense elements-----------
     for sense in entry.findall('sense'):
+        sense_data.append((ent_seq,))
+        sense_id += 1
 
         # indicates the sense is restricted to the lexeme
         # represented by keb/reb
         for stagk in sense.findall('stagk'):
-            stagk_list.append(stagk.text)
+            stagk_data.append((sense_id, stagk.text))
         for stagr in sense.findall('stagr'):
-            stagr_list.append(stagr.text)
+            stagr_data.append((sense_id, stagr.text))
 
         # cross reference to other entry
         for xref in sense.findall('xref'):
-            xref_list.append(xref.text)
+            xref_data.append((sense_id, xref.text))
 
         # another entry is an antonym of this word
         for ant in sense.findall('ant'):
-            ant_list.append(ant.text)
+            ant_data.append((sense_id, ant.text))
 
         # part of speech information
         for pos in sense.findall('pos'):
-            pos_list.append(pos.text)
+            pos_data.append((sense_id, pos.text))
 
         # field of application information
         for field in sense.findall('field'):
-            field_list.append(field.text)
+            field_data.append((sense_id, field.text))
 
         # other relevant information
         for misc in sense.findall('misc'):
-            misc_list.append(misc.text)
+            misc_data.append((sense_id, misc.text))
 
         # source language of loan words
         for lsource in sense.findall('lsource'):
@@ -137,23 +147,11 @@ for entry in root.findall('entry'):
             # Japanese word constructed from words in source language
             ls_wasei = lsource.get('ls_wasei')
 
-            if origin is None:
-                origin = "n/a"
-            if lang is None:
-                lang = "n/a"
-            if ls_type is None:
-                ls_type = "n/a"
-            if ls_wasei is None:
-                ls_wasei = "n/a"
-
-            lsource_list.append('origin: ' + origin +
-                                ', lang: ' + lang +
-                                ', ls_type: ' + ls_type +
-                                ', ls_wasei: ' + ls_wasei)
+            lsource_data.append((sense_id, origin, lang, ls_type, ls_wasei))
 
         # dialect information
         for dial in sense.findall('dial'):
-            dial_list.append(dial.text)
+            dial_data.append((sense_id, dial.text))
 
         # definitions
         for gloss in sense.findall('gloss'):
@@ -170,32 +168,44 @@ for entry in root.findall('entry'):
             # definition type (e.g. 'lit' (literal), 'fig' (figurative), etc)
             g_type = gloss.get('g_type')
 
-            if definition is None:
-                definition = "n/a"
-            if lang is None:
-                lang = "n/a"
-            if g_gend is None:
-                g_gend = "n/a"
-            if g_type is None:
-                g_type = "n/a"
+            gloss_data.append((sense_id, definition, lang, g_gend, g_type))
 
-            gloss_list.append('definition: ' + definition +
-                                ', lang: ' + lang +
-                                ', gender: ' + g_gend +
-                                ', type: ' + g_type)
+            gloss_id += 1
+
+            for pri in gloss.findall('pri'):
+                pri_data.append((gloss_id, pri.text))
 
         # sense information (frequency of senses, regional variations etc.)
         for s_inf in sense.findall('s_inf'):
-            s_inf_list.append(s_inf.text)
+            s_inf_data.append((sense_id, s_inf.text))
 
-    # sql_data.append((ent_seq, "k_ele_list", ke_inf, ke_pri, "r_ele_list", reb,
-    #                re_nokanji, "re_restr_list", re_inf, re_pri, "sense_list"))
-    # insert_data(conn, ent_seq, k_ele_list, keb, ke_inf, ke_pri, r_ele_list, reb, re_nokanji,
-    #             re_restr_list, re_inf, re_pri, sense_list)
+    entry_data.append((ent_seq,))
 
     # purge lists
-    k_ele_list, r_ele_list, re_restr_list, sense_list, stagr_list, stagk_list = ([] for i in range(6))
-    xref_list, ant_list, pos_list, field_list, misc_list = ([] for i in range(5))
-    lsource_list, dial_list, gloss_list, s_inf_list = ([] for i in range(4))
+    k_ele_list, re_restr_list = ([] for i in range(2))
 
-# insert_data(conn, sql_data)
+insert_data(conn, 'entry', entry_data)
+# -----------k_ele tables-------------
+insert_data(conn, 'k_ele', k_ele_data)
+insert_data(conn, 'ke_inf', ke_inf_data)
+insert_data(conn, 'ke_pri', ke_pri_data)
+# -----------r_ele tables-------------
+insert_data(conn, 'r_ele', r_ele_data)
+insert_data(conn, 're_restr', re_restr_data)
+insert_data(conn, 're_inf', re_inf_data)
+insert_data(conn, 're_pri', re_pri_data)
+# -----------sense tables-------------
+insert_data(conn, 'sense', sense_data)
+insert_data(conn, 'stagk', stagk_data)
+insert_data(conn, 'stagr', stagr_data)
+insert_data(conn, 'pos', pos_data)
+insert_data(conn, 'xref', xref_data)
+insert_data(conn, 'ant', ant_data)
+insert_data(conn, 'field', field_data)
+insert_data(conn, 'misc', misc_data)
+insert_data(conn, 'lsource', lsource_data)
+insert_data(conn, 'dial', dial_data)
+insert_data(conn, 'gloss', gloss_data)
+insert_data(conn, 's_inf', s_inf_data)
+
+insert_data(conn, 'pri', pri_data)
