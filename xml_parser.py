@@ -23,10 +23,6 @@ pri_data = []
 
 for entry in root.findall('entry'):
 
-    #initialize lists for elements with possible duplicates
-    k_ele_list, re_restr_list = ([] for i in range(2))
-
-
     # unique id for each entry
     ent_seq = entry.find('ent_seq').text
 
@@ -34,10 +30,10 @@ for entry in root.findall('entry'):
     count = 0
     for k_ele in entry.findall('k_ele'):
         count += 1
-        k_ele_list.append(count)
+        break
 
-    #if the element list isnt empty
-    if len(k_ele_list) > 0:
+    #if there are more than one elements
+    if count > 0:
 
         #for all kanji elements
         for k_ele in entry.findall('k_ele'):
@@ -74,13 +70,14 @@ for entry in root.findall('entry'):
             r_ele_data.append((ent_seq, reb, 0))
 
         r_ele_id += 1
-
+        
+        count = 0
         # reading applies to subset of keb elements
         for re_restr in r_ele.findall('re_restr'):
-            re_restr_list.append(re_restr)
+            count += 1
+            break
 
-        if len(re_restr_list) > 0:
-
+        if count > 0:
             for re_restr in r_ele.findall('re_restr'):
                 # reading applies to subset of keb elements
                 re_restr = re_restr.text
@@ -180,9 +177,6 @@ for entry in root.findall('entry'):
             s_inf_data.append((sense_id, s_inf.text))
 
     entry_data.append((ent_seq,))
-
-    # purge lists
-    k_ele_list, re_restr_list = ([] for i in range(2))
 
 insert_data(conn, 'entry', entry_data)
 # -----------k_ele tables-------------
