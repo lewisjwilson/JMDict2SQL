@@ -40,31 +40,29 @@ def insert_data(conn, table_name, data_list):
 # function for changing sql based on table inserting into
 def insert_data_sql(table_name):
     return{
-        'entry': ''' INSERT INTO entry(ent_seq) VALUES(?) ''',
-        # ------------------------------k_ele tables---------------------------------
-        'k_ele': ''' INSERT INTO k_ele(ent_seq, keb) VALUES(?, ?) ''',
-        'ke_inf': ''' INSERT INTO ke_inf(k_ele_id, value) VALUES(?, ?) ''',
-        'ke_pri': ''' INSERT INTO ke_pri(k_ele_id, value) VALUES(?, ?) ''',
-        # ------------------------------r_ele tables---------------------------------
-        'r_ele': ''' INSERT INTO r_ele(ent_seq, reb, no_kanji) VALUES(?, ?, ?) ''',
-        're_restr': ''' INSERT INTO re_restr(r_ele_id, value) VALUES(?, ?) ''',
-        're_inf': ''' INSERT INTO re_inf(r_ele_id, value) VALUES(?, ?) ''',
-        're_pri': ''' INSERT INTO re_pri(r_ele_id, value) VALUES(?, ?) ''',
+        'entry': ''' INSERT INTO entry(entry_id) VALUES(?) ''',
+        # ------------------------------kanji tables---------------------------------
+        'k_ele': ''' INSERT INTO kanji(entry_id, value) VALUES(?, ?) ''',
+        'ke_inf': ''' INSERT INTO kanjiTags(kanji_id, value) VALUES(?, ?) ''',
+        'ke_pri': ''' INSERT INTO kanjiCommon(kanji_id, value) VALUES(?, ?) ''',
+        # ------------------------------kana tables---------------------------------
+        'r_ele': ''' INSERT INTO kana(entry_id, value, no_kanji) VALUES(?, ?, ?) ''',
+        're_restr': ''' INSERT INTO kanaAppliesToKanji(kana_id, value) VALUES(?, ?) ''',
+        're_inf': ''' INSERT INTO kanaTags(kana_id, value) VALUES(?, ?) ''',
+        're_pri': ''' INSERT INTO kanaCommon(kana_id, value) VALUES(?, ?) ''',
         # ------------------------------senses tables---------------------------------
-        'sense': ''' INSERT INTO sense(ent_seq) VALUES(?) ''',
-        'stagk': ''' INSERT INTO stagk(sense_id, value) VALUES(?, ?) ''',
-        'stagr': ''' INSERT INTO stagr(sense_id, value) VALUES(?, ?) ''',
-        'pos': ''' INSERT INTO pos(sense_id, value) VALUES(?, ?) ''',
-        'xref': ''' INSERT INTO xref(sense_id, value) VALUES(?, ?) ''',
-        'ant': ''' INSERT INTO ant(sense_id, value) VALUES(?, ?) ''',
+        'sense': ''' INSERT INTO sense(entry_id) VALUES(?) ''',
+        'stagk': ''' INSERT INTO senseAppliesToKanji(sense_id, value) VALUES(?, ?) ''',
+        'stagr': ''' INSERT INTO senseAppliesToKana(sense_id, value) VALUES(?, ?) ''',
+        'pos': ''' INSERT INTO partOfSpeech(sense_id, value) VALUES(?, ?) ''',
+        'xref': ''' INSERT INTO crossReference(sense_id, value) VALUES(?, ?) ''',
+        'ant': ''' INSERT INTO antonym(sense_id, value) VALUES(?, ?) ''',
         'field': ''' INSERT INTO field(sense_id, value) VALUES(?, ?) ''',
         'misc': ''' INSERT INTO misc(sense_id, value) VALUES(?, ?) ''',
-        'lsource': ''' INSERT INTO lsource(sense_id, origin, lang, ls_type, ls_wasei) VALUES(?, ?, ?, ?, ?) ''',
-        'dial': ''' INSERT INTO dial(sense_id, value) VALUES(?, ?) ''',
-        'gloss': ''' INSERT INTO gloss(sense_id, definition, lang, g_gend, g_type) VALUES(?, ?, ?, ?, ?) ''',
-        's_inf': ''' INSERT INTO s_inf(sense_id, value) VALUES(?, ?) ''',
-
-        'pri': ''' INSERT INTO pri(gloss_id, value) VALUES(?, ?) '''
+        'lsource': ''' INSERT INTO languageSource(sense_id, origin, lang, type, wasei) VALUES(?, ?, ?, ?, ?) ''',
+        'dial': ''' INSERT INTO dialect(sense_id, value) VALUES(?, ?) ''',
+        'gloss': ''' INSERT INTO definition(sense_id, value, lang, gend, type) VALUES(?, ?, ?, ?, ?) ''',
+        's_inf': ''' INSERT INTO senseInfo(sense_id, value) VALUES(?, ?) '''
 
     }.get(table_name, "TABLE_NOT_FOUND")
 
@@ -74,77 +72,77 @@ def create_database():
     create_table_sql_list = []
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS entry (
-                                        ent_seq INTEGER PRIMARY KEY); """)
+                                        entry_id INTEGER PRIMARY KEY); """)
 
 
-    # ------------------------------k_ele tables---------------------------------
+    # ------------------------------kanji tables---------------------------------
 
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS k_ele (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        ent_seq INTEGER,
-                                        keb TEXT,
-
-                                        FOREIGN KEY(ent_seq) REFERENCES entry(ent_seq)
-
-                                        ); """)
-
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS ke_inf (
-                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        k_ele_id INTEGER,
+                                        entry_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(k_ele_id) REFERENCES k_ele(id)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS ke_pri (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanjiTags (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        k_ele_id INTEGER,
+                                        kanji_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(k_ele_id) REFERENCES k_ele(id)
+                                        FOREIGN KEY(kanji_id) REFERENCES kanji(id)
+
+                                        ); """)
+
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanjiCommon (
+                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                                        kanji_id INTEGER,
+                                        value INTEGER,
+
+                                        FOREIGN KEY(kanji_id) REFERENCES kanji(id)
 
                                         ); """)
 
 
-    # ------------------------------r_ele tables---------------------------------
+    # ------------------------------kana tables---------------------------------
 
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS r_ele (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kana (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        ent_seq INTEGER,
-                                        reb TEXT,
+                                        entry_id INTEGER,
+                                        value TEXT,
                                         no_kanji INTEGER,
 
-                                        FOREIGN KEY(ent_seq) REFERENCES entry(ent_seq)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS re_restr (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaAppliesToKanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        r_ele_id INTEGER,
+                                        kana_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(r_ele_id) REFERENCES r_ele(id)
+                                        FOREIGN KEY(kana_id) REFERENCES kana(id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS re_inf (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaTags (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        r_ele_id INTEGER,
+                                        kana_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(r_ele_id) REFERENCES r_ele(id)
+                                        FOREIGN KEY(kana_id) REFERENCES kana(id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS re_pri (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaCommon (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        r_ele_id INTEGER,
+                                        kana_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(r_ele_id) REFERENCES r_ele(id)
+                                        FOREIGN KEY(kana_id) REFERENCES kana(id)
 
                                         ); """)
 
@@ -153,13 +151,13 @@ def create_database():
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS sense (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        ent_seq INTEGER,
+                                        entry_id INTEGER,
 
-                                        FOREIGN KEY(ent_seq) REFERENCES entry(ent_seq)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stagk (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseAppliesToKanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -168,7 +166,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS stagr (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseAppliesToKana (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -177,7 +175,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS pos (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS partOfSpeech (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -186,7 +184,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS xref (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS crossReference (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -195,7 +193,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS ant (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS antonym (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -222,7 +220,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS s_inf (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseInfo (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -231,19 +229,19 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS lsource (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS languageSource (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         origin text,
                                         lang TEXT,
-                                        ls_type TEXT,
-                                        ls_wasei TEXT,
+                                        type TEXT,
+                                        wasei TEXT,
 
                                         FOREIGN KEY(sense_id) REFERENCES sense(id)
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS dial (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS dialect (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -252,13 +250,13 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS gloss (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS definition (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
-                                        definition TEXT,
+                                        value TEXT,
                                         lang TEXT,
-                                        g_gend TEXT,
-                                        g_type TEXT,
+                                        gend TEXT,
+                                        type TEXT,
                                         pri TEXT,
 
 
@@ -267,16 +265,6 @@ def create_database():
                                         ); """)
 
 
-
-
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS pri (
-                                        id INTEGER PRIMARY KEY AUTOINCREMENT,
-                                        gloss_id INTEGER,
-                                        value TEXT,
-
-                                        FOREIGN KEY(gloss_id) REFERENCES gloss(id)
-
-                                        ); """)
 
     # create a database connection
     conn = create_connection(database)

@@ -19,7 +19,6 @@ ke_inf_data, ke_pri_data, re_inf_data, re_restr_data = ([] for i in range(4))
 re_pri_data, stagk_data, stagr_data, pos_data = ([] for i in range(4))
 xref_data, ant_data, field_data, misc_data = ([] for i in range(4))
 lsource_data, dial_data, gloss_data, s_inf_data = ([] for i in range(4))
-pri_data = []
 
 for entry in root.findall('entry'):
 
@@ -70,7 +69,7 @@ for entry in root.findall('entry'):
             r_ele_data.append((ent_seq, reb, 0))
 
         r_ele_id += 1
-        
+
         count = 0
         # reading applies to subset of keb elements
         for re_restr in r_ele.findall('re_restr'):
@@ -93,7 +92,7 @@ for entry in root.findall('entry'):
         try:
             # priority of the reading entry
             re_pri = r_ele.find('re_pri').text
-            re_pri_data.append((r_ele_id, re_pri))
+            re_pri_data.append((r_ele_id, 1))
         except:
             pass
 
@@ -169,9 +168,6 @@ for entry in root.findall('entry'):
 
             gloss_id += 1
 
-            for pri in gloss.findall('pri'):
-                pri_data.append((gloss_id, pri.text))
-
         # sense information (frequency of senses, regional variations etc.)
         for s_inf in sense.findall('s_inf'):
             s_inf_data.append((sense_id, s_inf.text))
@@ -201,5 +197,3 @@ insert_data(conn, 'lsource', lsource_data)
 insert_data(conn, 'dial', dial_data)
 insert_data(conn, 'gloss', gloss_data)
 insert_data(conn, 's_inf', s_inf_data)
-
-insert_data(conn, 'pri', pri_data)
