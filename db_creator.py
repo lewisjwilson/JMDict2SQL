@@ -43,26 +43,26 @@ def insert_data_sql(table_name):
         'entry': ''' INSERT INTO entry(entry_id) VALUES(?) ''',
         # ------------------------------kanji tables---------------------------------
         'k_ele': ''' INSERT INTO kanji(entry_id, value) VALUES(?, ?) ''',
-        'ke_inf': ''' INSERT INTO kanjiTags(kanji_id, value) VALUES(?, ?) ''',
-        'ke_pri': ''' INSERT INTO kanjiCommon(kanji_id, value) VALUES(?, ?) ''',
+        'ke_inf': ''' INSERT INTO kanji_tags(kanji_id, value) VALUES(?, ?) ''',
+        'ke_pri': ''' INSERT INTO kanji_common(kanji_id, value) VALUES(?, ?) ''',
         # ------------------------------kana tables---------------------------------
         'r_ele': ''' INSERT INTO kana(entry_id, value, no_kanji) VALUES(?, ?, ?) ''',
         're_restr': ''' INSERT INTO kanaAppliesToKanji(kana_id, value) VALUES(?, ?) ''',
-        're_inf': ''' INSERT INTO kanaTags(kana_id, value) VALUES(?, ?) ''',
-        're_pri': ''' INSERT INTO kanaCommon(kana_id, value) VALUES(?, ?) ''',
+        're_inf': ''' INSERT INTO kana_tags(kana_id, value) VALUES(?, ?) ''',
+        're_pri': ''' INSERT INTO kana_common(kana_id, value) VALUES(?, ?) ''',
         # ------------------------------senses tables---------------------------------
         'sense': ''' INSERT INTO sense(entry_id) VALUES(?) ''',
         'stagk': ''' INSERT INTO senseAppliesToKanji(sense_id, value) VALUES(?, ?) ''',
         'stagr': ''' INSERT INTO senseAppliesToKana(sense_id, value) VALUES(?, ?) ''',
-        'pos': ''' INSERT INTO partOfSpeech(sense_id, value) VALUES(?, ?) ''',
-        'xref': ''' INSERT INTO crossReference(sense_id, value) VALUES(?, ?) ''',
+        'pos': ''' INSERT INTO part_of_speech(sense_id, value) VALUES(?, ?) ''',
+        'xref': ''' INSERT INTO cross_reference(sense_id, value) VALUES(?, ?) ''',
         'ant': ''' INSERT INTO antonym(sense_id, value) VALUES(?, ?) ''',
         'field': ''' INSERT INTO field(sense_id, value) VALUES(?, ?) ''',
         'misc': ''' INSERT INTO misc(sense_id, value) VALUES(?, ?) ''',
-        'lsource': ''' INSERT INTO languageSource(sense_id, origin, lang, type, wasei) VALUES(?, ?, ?, ?, ?) ''',
+        'lsource': ''' INSERT INTO lang_source(sense_id, origin, lang, type, wasei) VALUES(?, ?, ?, ?, ?) ''',
         'dial': ''' INSERT INTO dialect(sense_id, value) VALUES(?, ?) ''',
         'gloss': ''' INSERT INTO definition(sense_id, value, lang, gend, type) VALUES(?, ?, ?, ?, ?) ''',
-        's_inf': ''' INSERT INTO senseInfo(sense_id, value) VALUES(?, ?) '''
+        's_inf': ''' INSERT INTO sense_info(sense_id, value) VALUES(?, ?) '''
 
     }.get(table_name, "TABLE_NOT_FOUND")
 
@@ -87,7 +87,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanjiTags (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanji_tags (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kanji_id INTEGER,
                                         value TEXT,
@@ -96,7 +96,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanjiCommon (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanji_common (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kanji_id INTEGER,
                                         value INTEGER,
@@ -128,7 +128,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaTags (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kana_tags (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kana_id INTEGER,
                                         value TEXT,
@@ -137,7 +137,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaCommon (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kana_common (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kana_id INTEGER,
                                         value TEXT,
@@ -175,7 +175,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS partOfSpeech (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS part_of_speech (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -184,7 +184,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS crossReference (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS cross_reference (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -220,7 +220,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseInfo (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS sense_info (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -229,7 +229,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS languageSource (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS lang_source (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         origin text,
