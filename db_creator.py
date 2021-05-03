@@ -67,7 +67,8 @@ def insert_data_sql(table_name):
     }.get(table_name, "TABLE_NOT_FOUND")
 
 def create_database():
-    database = r"sqlite.db"
+
+    database = r"JMdict_e.db"
 
     create_table_sql_list = []
 
@@ -99,7 +100,7 @@ def create_database():
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanjiCommon (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kanji_id INTEGER,
-                                        value INTEGER,
+                                        value TEXT,
 
                                         FOREIGN KEY(kanji_id) REFERENCES kanji(id)
 

@@ -7,7 +7,7 @@ tree = ET.parse('JMdict_e')
 root = tree.getroot() #root = <JMDict>
 
 create_database()
-conn = create_connection(r"sqlite.db")
+conn = create_connection(r"JMdict_e.db")
 
 k_ele_id = 0
 r_ele_id = 0
@@ -92,7 +92,7 @@ for entry in root.findall('entry'):
         try:
             # priority of the reading entry
             re_pri = r_ele.find('re_pri').text
-            re_pri_data.append((r_ele_id, 1))
+            re_pri_data.append((r_ele_id, re_pri))
         except:
             pass
 
