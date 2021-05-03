@@ -6,8 +6,8 @@ A script to convert the JMDict_e.gz gzip file into a usable sqlite3 database
 
 #### Prerequisites
 
-- python3
-- JMDict_e.gz file (avaliable from [edrdg.org](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project))
+    - python3
+    - JMDict_e.gz file (avaliable from edrdg.org)
 
 ### JMdict_e.db Format
 
@@ -60,7 +60,7 @@ The format for the database tables is as follows:
 - `kana_applies_to_kanji` [ **(PK) id, (FK) kana_id, value** ]
   - `id`: a unique ID for each kana_applies_to_kanji record
   - `kana_id`: foreign key from `kana` table
-  - `value`: denotes the kanji applies to the current kana
+  - `value`: denotesthat the kanji applies to the current kana
 
 
 
@@ -70,12 +70,30 @@ The format for the database tables is as follows:
   - `id`: a unique ID for each sense
   - `entry_id`: foreign key from `entry` table
 
+- `sense_applies_to_kanji` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each sense_applies_to_kanji record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: denotes that the sense applies to the current kanji
+
+- `sense_applies_to_kana` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each sense_applies_to_kana record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: denotes that the sense applies to the current kana
+
+- `part_of_speech` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: denotes the part of speech of the sense (eg. noun, adjective...)
+
 
  
+### ER Diagram
 
-
-
+![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116845561-1a4bb700-ac21-11eb-8dc8-63f18a7772d9.png)
+(ER Diagram created using [dbeaver.io](https://dbeaver.io/))
 
 ### Usage
 
-Run "setup.sh" to create an sqlite3 database (JMdict_e.db)
+1. Download the latest [JMdict_e.gz file](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project).
+2. Run `./setup.sh` to create an sqlite3 database (JMdict_e.db)
+3. Find the output `JMdict_e.db`
