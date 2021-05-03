@@ -47,13 +47,13 @@ def insert_data_sql(table_name):
         'ke_pri': ''' INSERT INTO kanji_common(kanji_id, value) VALUES(?, ?) ''',
         # ------------------------------kana tables---------------------------------
         'r_ele': ''' INSERT INTO kana(entry_id, value, no_kanji) VALUES(?, ?, ?) ''',
-        're_restr': ''' INSERT INTO kanaAppliesToKanji(kana_id, value) VALUES(?, ?) ''',
+        're_restr': ''' INSERT INTO kana_applies_to_kanji(kana_id, value) VALUES(?, ?) ''',
         're_inf': ''' INSERT INTO kana_tags(kana_id, value) VALUES(?, ?) ''',
         're_pri': ''' INSERT INTO kana_common(kana_id, value) VALUES(?, ?) ''',
         # ------------------------------senses tables---------------------------------
         'sense': ''' INSERT INTO sense(entry_id) VALUES(?) ''',
-        'stagk': ''' INSERT INTO senseAppliesToKanji(sense_id, value) VALUES(?, ?) ''',
-        'stagr': ''' INSERT INTO senseAppliesToKana(sense_id, value) VALUES(?, ?) ''',
+        'stagk': ''' INSERT INTO sense_applies_to_kanji(sense_id, value) VALUES(?, ?) ''',
+        'stagr': ''' INSERT INTO sense_applies_to_kana(sense_id, value) VALUES(?, ?) ''',
         'pos': ''' INSERT INTO part_of_speech(sense_id, value) VALUES(?, ?) ''',
         'xref': ''' INSERT INTO cross_reference(sense_id, value) VALUES(?, ?) ''',
         'ant': ''' INSERT INTO antonym(sense_id, value) VALUES(?, ?) ''',
@@ -120,7 +120,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanaAppliesToKanji (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kana_applies_to_kanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         kana_id INTEGER,
                                         value TEXT,
@@ -158,7 +158,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseAppliesToKanji (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS sense_applies_to_kanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
@@ -167,7 +167,7 @@ def create_database():
 
                                         ); """)
 
-    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS senseAppliesToKana (
+    create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS sense_applies_to_kana (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         sense_id INTEGER,
                                         value TEXT,
