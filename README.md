@@ -85,7 +85,38 @@ The format for the database tables is as follows:
   - `sense_id`: foreign key from `sense` table
   - `value`: denotes the part of speech of the sense (eg. noun, adjective...)
 
+- `cross_reference` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: references another entry with a similar meaning
 
+- `antonym` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: references another entry that is the antonym of the current sense
+
+- `field` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: information about the field of application
+
+- `misc` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: miscellaneous information about the sense
+
+- `sense_info` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: indicates level of currency of a sense, the regional variations, etc. of the sense
+
+- `lang_source` [ **(PK) id, (FK) sense_id, origin, lang, type, wasei** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `origin`: where the entry originates from (can be NULL)
+  - `lang`: the language of the origin
+  - `type`: describes whether the sense fully or partially describes the source word
+  - 
  
 ### ER Diagram
 
