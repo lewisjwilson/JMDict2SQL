@@ -61,7 +61,7 @@ def insert_data_sql(table_name):
         'misc': ''' INSERT INTO misc(sense_id, value) VALUES(?, ?) ''',
         'lsource': ''' INSERT INTO lang_source(sense_id, origin, lang, type, wasei) VALUES(?, ?, ?, ?, ?) ''',
         'dial': ''' INSERT INTO dialect(sense_id, value) VALUES(?, ?) ''',
-        'gloss': ''' INSERT INTO definition(sense_id, value, lang, gend, type) VALUES(?, ?, ?, ?, ?) ''',
+        'gloss': ''' INSERT INTO definition(sense_id, value, lang, type) VALUES(?, ?, ?, ?) ''',
         's_inf': ''' INSERT INTO sense_info(sense_id, value) VALUES(?, ?) '''
 
     }.get(table_name, "TABLE_NOT_FOUND")
@@ -236,7 +236,7 @@ def create_database():
                                         origin text,
                                         lang TEXT,
                                         type TEXT,
-                                        wasei TEXT,
+                                        wasei INTEGER,
 
                                         FOREIGN KEY(sense_id) REFERENCES sense(id)
 
@@ -256,9 +256,7 @@ def create_database():
                                         sense_id INTEGER,
                                         value TEXT,
                                         lang TEXT,
-                                        gend TEXT,
                                         type TEXT,
-                                        pri TEXT,
 
 
                                         FOREIGN KEY(sense_id) REFERENCES sense(id)

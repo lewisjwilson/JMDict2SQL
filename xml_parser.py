@@ -145,7 +145,9 @@ for entry in root.findall('entry'):
             # Japanese word constructed from words in source language
             ls_wasei = lsource.get('ls_wasei')
             if(ls_wasei is None):
-                ls_wasei = "n"
+                ls_wasei = 0
+            else:
+                ls_wasei = 1
 
             lsource_data.append((sense_id, origin, lang, ls_type, ls_wasei))
 
@@ -162,13 +164,10 @@ for entry in root.findall('entry'):
             # definition language
             lang = gloss.get('{http://www.w3.org/XML/1998/namespace}lang')
 
-            # definition gender
-            g_gend = gloss.get('g_gend')
-
             # definition type (e.g. 'lit' (literal), 'fig' (figurative), etc)
             g_type = gloss.get('g_type')
 
-            gloss_data.append((sense_id, definition, lang, g_gend, g_type))
+            gloss_data.append((sense_id, definition, lang, g_type))
 
             gloss_id += 1
 
