@@ -137,11 +137,15 @@ for entry in root.findall('entry'):
             # source language
             lang = lsource.get('{http://www.w3.org/XML/1998/namespace}lang')
 
-            # does lsource element fully describe the word (default: fully)
+            # does lsource element fully describe the word (default: full)
             ls_type = lsource.get('ls_type')
+            if(ls_type is None):
+                ls_type = "full"
 
             # Japanese word constructed from words in source language
             ls_wasei = lsource.get('ls_wasei')
+            if(ls_wasei is None):
+                ls_wasei = "n"
 
             lsource_data.append((sense_id, origin, lang, ls_type, ls_wasei))
 
