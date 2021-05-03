@@ -116,11 +116,24 @@ The format for the database tables is as follows:
   - `origin`: where the entry originates from (can be NULL)
   - `lang`: the language of the origin
   - `type`: describes whether the sense fully or partially describes the source word
-  - 
+  - `wasei`: denotes "Japanese-language expressions based on English words, or parts of word combinations, that do not exist in standard English or whose meanings differ from the words from which they were derived." Check [Wasei-eigo](https://en.wikipedia.org/wiki/Wasei-eigo)
+
+- `dialect` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: the dialect of the entry (Kansai-ben, Hokkaido-ben,  etc.)
+
+- `definition` [ **(PK) id, (FK) sense_id, value, lang, type** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: definition of the current entry
+  - `lang`: language of the definition
+  - `type`: denotes literal (lit), figurative (fig), explanation (expl)... of the sense
+
  
 ### ER Diagram
 
-![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116845561-1a4bb700-ac21-11eb-8dc8-63f18a7772d9.png)
+![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116847498-9ea03900-ac25-11eb-8135-e43064e0efe1.png)
 (ER Diagram created using [dbeaver.io](https://dbeaver.io/))
 
 ### Usage
