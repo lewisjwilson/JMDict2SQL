@@ -2,12 +2,12 @@
 
 ### Description
 
-A script to convert the JMDict_e.gz gzip file into a usable sqlite3 database
+A script to convert the JMdict_e.gz gzip file into a usable sqlite3 database
 
 #### Prerequisites
 
     - python3
-    - JMDict_e.gz file (avaliable from edrdg.org)
+    - JMdict_e.gz file (avaliable from edrdg.org)
 
 ### JMdict_e.db Format
 
