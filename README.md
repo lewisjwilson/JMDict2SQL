@@ -1,4 +1,4 @@
-# JMDict2SQL
+# JMdict2SQL
 
 ### Description
 
