@@ -139,5 +139,7 @@ The format for the database tables is as follows:
 ### Usage
 
 1. Download the latest [JMdict_e.gz file](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project).
-2. Run `./setup.sh` to create an sqlite3 database (JMdict_e.db)
+2. Run `./setup.sh` to create an sqlite3 database (JMdict_e.db)\*
 3. Find the output `JMdict_e.db`
+
+\* you might need to run `chmod +x setup.sh` first.
