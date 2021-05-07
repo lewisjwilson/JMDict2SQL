@@ -2,7 +2,7 @@
 
 ### Description
 
-A script to convert the JMdict_e.gz gzip file into a usable sqlite3 database
+A script to convert the JMdict_e gzip file into a sqlite3 relational database.
 
 #### Prerequisites
 
