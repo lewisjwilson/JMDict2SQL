@@ -16,7 +16,7 @@ The format for the database tables is as follows:
 
 ##### Entry Table
 
-- `entry` [ **(PK) entry id** ]
+- `entry` [ **(PK) id** ]
   - `id`: a unique ID for each entry
  
  
