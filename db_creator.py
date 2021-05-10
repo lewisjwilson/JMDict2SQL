@@ -40,7 +40,7 @@ def insert_data(conn, table_name, data_list):
 # function for changing sql based on table inserting into
 def insert_data_sql(table_name):
     return{
-        'entry': ''' INSERT INTO entry(entry_id) VALUES(?) ''',
+        'entry': ''' INSERT INTO entry(id) VALUES(?) ''',
         # ------------------------------kanji tables---------------------------------
         'k_ele': ''' INSERT INTO kanji(entry_id, value) VALUES(?, ?) ''',
         'ke_inf': ''' INSERT INTO kanji_tags(kanji_id, value) VALUES(?, ?) ''',
@@ -73,7 +73,7 @@ def create_database():
     create_table_sql_list = []
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS entry (
-                                        entry_id INTEGER PRIMARY KEY); """)
+                                        id INTEGER PRIMARY KEY); """)
 
 
     # ------------------------------kanji tables---------------------------------
