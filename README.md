@@ -142,6 +142,6 @@ The format for the database tables is as follows:
 2. Download the latest [JMdict_e.gz file](http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz).
 3. Copy `JMdict_e.gz` into the `JMDict2SQL` directory.
 4. Run `./setup.sh` to create an sqlite3 database (JMdict_e.db)\*
-5. Find the output `JMdict_e.db` in the main JMdict2SQL folder.
+5. Find the database file, `JMdict_e.db`, in the `JMdict2SQL` directory.
 
 \* you might need to run `chmod +x setup.sh` first.
