@@ -4,12 +4,12 @@
 
 A script to convert the JMdict_e gzip file into a sqlite3 relational database.
 
-#### Prerequisites
+### Prerequisites
 
     - python3
     - JMdict_e.gz file (avaliable from edrdg.org)
 
-#### Usage
+### Usage
 ```
 1. Clone this respository to your computer
 2. Download the latest JMdict_e.gz file (see below).
@@ -17,11 +17,11 @@ A script to convert the JMdict_e gzip file into a sqlite3 relational database.
 4. Run ./setup.sh to create an sqlite3 database (JMdict_e.db)*
 5. Find the database file, JMdict_e.db, in the JMdict2SQL directory.
 ```
-* you might need to run `chmod +x setup.sh` first.
+\* you might need to run `chmod +x setup.sh` first.
 
 [Click here for the latest JMdict_e.gz file](http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz)
 
-#### JMdict_e.db Format
+### JMdict_e.db Format
 
 JMdict_e.db is a fully relational database.
 The format for the database tables is as follows:
