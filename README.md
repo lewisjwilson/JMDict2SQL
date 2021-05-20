@@ -1,13 +1,27 @@
-# JMDict2SQL
+# JMdict2SQL
+
+[![CodeFactor](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql/badge)](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql)
 
 ### Description
 
-A script to convert the JMDict_e.gz gzip file into a usable sqlite3 database
+A script to convert the JMdict_e gzip file into a sqlite3 relational database.
 
-#### Prerequisites
+### Prerequisites
 
     - python3
-    - JMDict_e.gz file (avaliable from edrdg.org)
+    - JMdict_e.gz file (avaliable from edrdg.org)
+
+### Usage
+```
+1. Clone this respository to your computer
+2. Download the latest JMdict_e.gz file (see below).
+3. Copy JMdict_e.gz into the JMDict2SQL directory.
+4. Run ./setup.sh to create an sqlite3 database (JMdict_e.db)*
+5. Find the database file, JMdict_e.db, in the JMdict2SQL directory.
+```
+\* you might need to run `chmod +x setup.sh` first.
+
+[Click here for the latest JMdict_e.gz file](http://ftp.edrdg.org/pub/Nihongo/JMdict_e.gz)
 
 ### JMdict_e.db Format
 
@@ -16,8 +30,8 @@ The format for the database tables is as follows:
 
 ##### Entry Table
 
-- `entry` [ **(PK) entry id** ]
-  - `entry_id`: a unique ID for each entry
+- `entry` [ **(PK) id** ]
+  - `id`: a unique ID for each entry
  
  
 ##### Kanji Tables
@@ -116,15 +130,22 @@ The format for the database tables is as follows:
   - `origin`: where the entry originates from (can be NULL)
   - `lang`: the language of the origin
   - `type`: describes whether the sense fully or partially describes the source word
-  - 
+  - `wasei`: denotes "Japanese-language expressions based on English words, or parts of word combinations, that do not exist in standard English or whose meanings differ from the words from which they were derived." Check [Wasei-eigo](https://en.wikipedia.org/wiki/Wasei-eigo)
+
+- `dialect` [ **(PK) id, (FK) sense_id, value** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: the dialect of the entry (Kansai-ben, Hokkaido-ben,  etc.)
+
+- `definition` [ **(PK) id, (FK) sense_id, value, lang, type** ]
+  - `id`: a unique ID for each record
+  - `sense_id`: foreign key from `sense` table
+  - `value`: definition of the current entry
+  - `lang`: language of the definition
+  - `type`: denotes literal (lit), figurative (fig), explanation (expl)... of the sense
+
  
 ### ER Diagram
 
-![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116845561-1a4bb700-ac21-11eb-8dc8-63f18a7772d9.png)
+![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116847498-9ea03900-ac25-11eb-8135-e43064e0efe1.png)
 (ER Diagram created using [dbeaver.io](https://dbeaver.io/))
-
-### Usage
-
-1. Download the latest [JMdict_e.gz file](https://www.edrdg.org/wiki/index.php/JMdict-EDICT_Dictionary_Project).
-2. Run `./setup.sh` to create an sqlite3 database (JMdict_e.db)
-3. Find the output `JMdict_e.db`
