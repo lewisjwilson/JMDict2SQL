@@ -1,5 +1,7 @@
 # JMdict2SQL
 
+[![CodeFactor](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql/badge)](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql)
+
 ### Description
 
 A script to convert the JMdict_e gzip file into a sqlite3 relational database.
