@@ -3,6 +3,7 @@
 import sqlite3
 from sqlite3 import Error
 
+
 def create_connection(db_file):
 
     conn = None
@@ -23,6 +24,7 @@ def create_table(conn, create_table_sql):
     except Error as e:
         print(e)
 
+
 def insert_data(conn, table_name, data_list):
 
     sql = insert_data_sql(table_name)
@@ -40,8 +42,8 @@ def insert_data(conn, table_name, data_list):
 # function for changing sql based on table inserting into
 def insert_data_sql(table_name):
     return{
-        'entry': ''' INSERT INTO entry(entry_id) VALUES(?) ''',
-        # ------------------------------kanji tables---------------------------------
+        'entry': ''' INSERT INTO entry(id) VALUES(?) ''',
+        # ------------------------------kanji tables---------------------------
         'k_ele': ''' INSERT INTO kanji(entry_id, value) VALUES(?, ?) ''',
         'ke_inf': ''' INSERT INTO kanji_tags(kanji_id, value) VALUES(?, ?) ''',
         'ke_pri': ''' INSERT INTO kanji_common(kanji_id, value) VALUES(?, ?) ''',
@@ -66,6 +68,7 @@ def insert_data_sql(table_name):
 
     }.get(table_name, "TABLE_NOT_FOUND")
 
+
 def create_database():
 
     database = r"JMdict_e.db"
@@ -73,11 +76,9 @@ def create_database():
     create_table_sql_list = []
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS entry (
-                                        entry_id INTEGER PRIMARY KEY); """)
-
+                                        id INTEGER PRIMARY KEY); """)
 
     # ------------------------------kanji tables---------------------------------
-
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kanji (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -106,9 +107,7 @@ def create_database():
 
                                         ); """)
 
-
     # ------------------------------kana tables---------------------------------
-
 
     create_table_sql_list.append(""" CREATE TABLE IF NOT EXISTS kana (
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -146,7 +145,6 @@ def create_database():
                                         FOREIGN KEY(kana_id) REFERENCES kana(id)
 
                                         ); """)
-
 
     # ------------------------------senses tables---------------------------------
 
@@ -262,8 +260,6 @@ def create_database():
                                         FOREIGN KEY(sense_id) REFERENCES sense(id)
 
                                         ); """)
-
-
 
     # create a database connection
     conn = create_connection(database)
