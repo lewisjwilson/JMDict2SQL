@@ -1,6 +1,6 @@
-# JMdict2SQL
-
 [![CodeFactor](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql/badge)](https://www.codefactor.io/repository/github/thicksandwich/jmdict2sql)
+
+# JMdict2SQL
 
 ### Description
 
