@@ -85,7 +85,7 @@ def create_database():
                                         entry_id INTEGER,
                                         value TEXT,
 
-                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(id)
 
                                         ); """)
 
@@ -115,7 +115,7 @@ def create_database():
                                         value TEXT,
                                         no_kanji INTEGER,
 
-                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(id)
 
                                         ); """)
 
@@ -152,7 +152,7 @@ def create_database():
                                         id INTEGER PRIMARY KEY AUTOINCREMENT,
                                         entry_id INTEGER,
 
-                                        FOREIGN KEY(entry_id) REFERENCES entry(entry_id)
+                                        FOREIGN KEY(entry_id) REFERENCES entry(id)
 
                                         ); """)
 
