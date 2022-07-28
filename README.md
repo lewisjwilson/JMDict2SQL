@@ -147,5 +147,5 @@ The format for the database tables is as follows:
  
 ### ER Diagram
 
-![JMdict_e_ER_diagram](https://user-images.githubusercontent.com/55784291/116847498-9ea03900-ac25-11eb-8135-e43064e0efe1.png)
-(ER Diagram created using [dbeaver.io](https://dbeaver.io/))
+![JMdict_e_ER_diagram](https://github.com/lewisjwilson/JMDict2SQL/blob/fully-relational/JMdict_e_ER_diagram.png)
+(ER Diagram created using [DbVisualizer](https://www.dbvis.com/))
